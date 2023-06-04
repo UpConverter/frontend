@@ -1,0 +1,5 @@
+{
+    "*.{ts,tsx}": "npm run eslint:fix",
+    "*.css": "npm run stylelint:fix",
+    "*.{ts,tsx,css,html}": "npm run prettier"
+}

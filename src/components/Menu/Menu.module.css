@@ -1,0 +1,13 @@
+.text {
+    font-family: Roboto, serif;
+    font-size: 22px;
+    font-weight: 400;
+    font-style: normal;
+    line-height: 38px;
+    color: #000;
+    text-decoration: none;
+}
+
+.box {
+    width: 350px;
+}

@@ -1,0 +1,109 @@
+{
+    "env": { "browser": true, "node": true, "es2021": true },
+    "extends": [
+        "eslint:recommended",
+        "plugin:react/recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:jsx-a11y/recommended",
+        "prettier"
+    ],
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "ecmaFeatures": {
+            "jsx": true
+        },
+        "ecmaVersion": "latest",
+        "sourceType": "module"
+    },
+    "settings": { "react": { "version": "detect" } },
+    "plugins": [
+        "react",
+        "@typescript-eslint",
+        "react-hooks",
+        "unused-imports",
+        "simple-import-sort",
+        "jsx-a11y",
+        "prettier"
+    ],
+    "rules": {
+        "no-console": "warn",
+        "react/prop-types": "off",
+        "@typescript-eslint/ban-ts-comment": "warn",
+        "@typescript-eslint/ban-types": [
+            "error",
+            {
+                "types": {
+                    "React.FC": {
+                        "message": "import type { FC } from 'react'"
+                    },
+                    "React.FunctionComponent": {
+                        "message": "import type { FC } from 'react'"
+                    },
+                    "FunctionComponent": {
+                        "message": "import type { FC } from 'react'"
+                    }
+                }
+            }
+        ],
+        "@typescript-eslint/consistent-type-imports": [
+            "error",
+            {
+                "prefer": "type-imports"
+            }
+        ],
+        "@typescript-eslint/no-explicit-any": "warn",
+        "@typescript-eslint/no-unused-vars": "error",
+        "unused-imports/no-unused-imports": "error",
+        "no-unused-vars": "warn",
+        "react/react-in-jsx-scope": "off",
+        "padding-line-between-statements": [
+            "error",
+            {
+                "blankLine": "always",
+                "prev": "*",
+                "next": "return"
+            }
+        ],
+        "react-hooks/exhaustive-deps": "error",
+        "react-hooks/rules-of-hooks": "error",
+        "react/display-name": "off",
+        "react/jsx-max-props-per-line": [
+            "error",
+            {
+                "maximum": {
+                    "single": 1,
+                    "multi": 1
+                }
+            }
+        ],
+        "react/jsx-sort-props": [
+            "error",
+            {
+                "callbacksLast": true,
+                "ignoreCase": true,
+                "noSortAlphabetically": false,
+                "shorthandFirst": true,
+                "multiline": "last"
+            }
+        ],
+        "react/self-closing-comp": [
+            "error",
+            {
+                "component": true,
+                "html": true
+            }
+        ],
+        "unused-imports/no-unused-vars": [
+            "warn",
+            {
+                "vars": "all",
+                "varsIgnorePattern": "^_",
+                "args": "after-used",
+                "argsIgnorePattern": "^_"
+            }
+        ],
+        "simple-import-sort/imports": "error",
+        "simple-import-sort/exports": "error"
+    },
+    "overrides": [{ "files": ["generate-api.mjs"], "rules": { "no-undef": "off" } }]
+}
