@@ -1,8 +1,10 @@
-.converterItemContainer {
+.itemContainer {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
 
+    width: 273px;
+    margin-bottom: 20px;
     padding: 20px 12px;
 
     background-color: #f2f2f2;
@@ -10,6 +12,8 @@
 }
 
 .name {
+    align-self: flex-start;
+
     margin-bottom: 5px;
 
     font-size: 22px;
@@ -28,8 +32,9 @@
     border-radius: 25px;
 }
 
-.radioButtons {
+.radioGroup {
     display: flex;
+    flex-direction: row;
     gap: 10px;
 }
 
