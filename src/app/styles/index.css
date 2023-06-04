@@ -3,6 +3,7 @@
 body {
     margin: 0;
     font-family: var(--font-family);
+    background: #e8e8e8;
 }
 
 .app {

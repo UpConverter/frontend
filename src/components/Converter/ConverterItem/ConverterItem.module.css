@@ -1,0 +1,42 @@
+.converterItemContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    padding: 20px 12px;
+
+    background-color: #f2f2f2;
+    border-radius: 25px;
+}
+
+.name {
+    margin-bottom: 5px;
+
+    font-size: 22px;
+    font-weight: 600;
+    line-height: 38px;
+    color: #000;
+    text-decoration: none;
+}
+
+.info {
+    margin-bottom: 10px;
+    padding: 20px;
+
+    background: #fff;
+    border: 2px solid #8b8b8b;
+    border-radius: 25px;
+}
+
+.radioButtons {
+    display: flex;
+    gap: 10px;
+}
+
+.radioLabel {
+    font-size: 14px;
+}
+
+.radioInput {
+    margin-right: 5px;
+}

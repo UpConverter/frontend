@@ -1,13 +1,11 @@
 .header {
     display: flex;
     flex-direction: row;
-    margin: 20px;
 }
 
 .menu {
     width: 4000px;
-    padding: 0 30px 10px;
-    border-bottom: solid 1px #f3f3f3;
+    padding: 10px 20px;
 }
 
 .ml {

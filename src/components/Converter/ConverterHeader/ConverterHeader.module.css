@@ -1,0 +1,11 @@
+.converterHeader {
+    width: 95vw;
+}
+
+.text {
+    font-size: 22px;
+    font-weight: 600;
+    line-height: 38px;
+    color: #000;
+    text-decoration: none;
+}

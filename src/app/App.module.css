@@ -1,0 +1,20 @@
+.mainContainer {
+    width: 95%;
+    height: 79vh;
+    margin: 0 auto;
+    padding: 20px;
+
+    background-color: #fff;
+    border-radius: 25px;
+}
+
+.mainContainer > * {
+    margin-bottom: 20px;
+}
+
+@media (width <= 600px) {
+    .mainContainer {
+        width: 100%;
+        padding: 10px;
+    }
+}

@@ -1,4 +1,4 @@
-.text {
+.logo {
     cursor: pointer;
 
     font-family: Roboto, serif;
@@ -22,10 +22,14 @@
 }
 
 .settingsIcon {
-    font-size: 36px;
+    font-size: 40px;
     transition: 0.5s;
 }
 
 .settingsIcon:hover {
     color: #000;
+}
+
+.logoImage {
+    height: 48px;
 }
