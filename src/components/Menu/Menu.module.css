@@ -1,7 +1,9 @@
 .text {
+    cursor: pointer;
+
     font-family: Roboto, serif;
     font-size: 22px;
-    font-weight: 400;
+    font-weight: 480;
     font-style: normal;
     line-height: 38px;
     color: #000;
@@ -10,4 +12,20 @@
 
 .box {
     width: 350px;
+}
+
+.rowContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.settingsIcon {
+    font-size: 36px;
+    transition: 0.5s;
+}
+
+.settingsIcon:hover {
+    color: #000;
 }
