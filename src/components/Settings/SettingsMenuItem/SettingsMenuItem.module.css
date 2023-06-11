@@ -1,0 +1,13 @@
+.menuItem {
+    cursor: 'pointer';
+
+    margin-bottom: 10px;
+
+    font-size: 18px;
+    color: grey;
+    text-transform: none;
+}
+
+.menuItem.selected {
+    color: #1976d2;
+}

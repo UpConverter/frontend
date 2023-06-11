@@ -1,0 +1,31 @@
+.flex {
+    display: flex;
+    margin-top: 40px;
+}
+
+.leftSide {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    width: 260px;
+    margin: 10px 25px 25px 10px;
+}
+
+.menuItems {
+    flex: 1 0 auto;
+}
+
+.submitButton {
+    align-self: center;
+    border-radius: 25px;
+}
+
+.rightSide {
+    margin-left: 40px;
+}
+
+.divider {
+    height: 71vh;
+    border-color: #000;
+}
