@@ -1,4 +1,5 @@
-import { Box, Button, Divider } from '@mui/material';
+import { CustomButton } from '@components/UI/CustomButton';
+import { Box, Divider } from '@mui/material';
 import type { FC } from 'react';
 import { useState } from 'react';
 
@@ -42,12 +43,7 @@ export const SettingsMenu: FC = () => {
                         />
                     ))}
                 </Box>
-                <Button
-                    className={styles.submitButton}
-                    variant='outlined'
-                >
-                    Применить
-                </Button>
+                <CustomButton variant='outlined'>Применить</CustomButton>
             </Box>
             <Divider
                 flexItem

@@ -16,11 +16,6 @@
     flex: 1 0 auto;
 }
 
-.submitButton {
-    align-self: center;
-    border-radius: 25px;
-}
-
 .rightSide {
     margin-left: 40px;
 }

@@ -1,0 +1,17 @@
+.rowContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.children {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
+}
+
+.label {
+    min-width: 300px;
+}
