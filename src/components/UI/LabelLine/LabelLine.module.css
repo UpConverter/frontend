@@ -1,17 +1,38 @@
-.rowContainer {
+.mainContainer {
     display: flex;
     flex-direction: row;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 
-.children {
+.mainSmallContainer {
+    margin-bottom: 10px;
+}
+
+.rowContainer {
     display: flex;
     flex-direction: row;
     gap: 10px;
     align-items: center;
 }
 
+.columnContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+
+    min-width: 500px;
+}
+
 .label {
     min-width: 300px;
+}
+
+.labelMedium {
+    min-width: 120px;
+}
+
+.labelSmall {
+    margin-bottom: 10px;
 }

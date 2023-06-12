@@ -1,3 +1,7 @@
 .selectControl {
     min-width: 138px;
 }
+
+.selectItem {
+    text-align: center;
+}

@@ -1,23 +1,26 @@
 import { CustomButton } from '@components/UI/CustomButton';
+import { CustomSelect } from '@components/UI/CustomSelect';
 import { LabelLine } from '@components/UI/LabelLine';
 import type { SelectChangeEvent } from '@mui/material';
-import { Box, FormControl, MenuItem, Select } from '@mui/material';
-import { Port } from '@services/CommonSettings/types';
+import { Box } from '@mui/material';
+import { ports, speeds } from '@services/CommonSettings/data';
 import type { FC } from 'react';
 import { useState } from 'react';
 
 import styles from './SettingsCommon.module.css';
 export const SettingsCommon: FC = () => {
-    const [selectedPort, setSelectedPort] = useState<Port>(Port.COM_1);
+    // const ports = useGetListPorts;
+    // const speeds = useGetListSpeeds;
+    const [selectedPort, setSelectedPort] = useState<string>('COM_1');
     const [selectedSpeed, setSelectedSpeed] = useState<number>(256000);
     const [selectedLanguage, setSelectedLanguage] = useState('ru');
 
-    const handlePortChange = (event: SelectChangeEvent<Port>) => {
-        const newPort = event.target.value as Port;
+    const handlePortChange = (event: SelectChangeEvent<string | number>) => {
+        const newPort = event.target.value as string;
         setSelectedPort(newPort);
     };
 
-    const handleSpeedChange = (event: SelectChangeEvent<number>) => {
+    const handleSpeedChange = (event: SelectChangeEvent<string | number>) => {
         const newSpeed = event.target.value as number;
         setSelectedSpeed(newSpeed);
     };
@@ -29,35 +32,22 @@ export const SettingsCommon: FC = () => {
     return (
         <Box>
             <LabelLine label='Порт подключения'>
-                <FormControl
+                <CustomSelect
                     className={styles.selectControl}
+                    data={ports}
                     size='small'
-                >
-                    <Select
-                        value={selectedPort}
-                        onChange={handlePortChange}
-                    >
-                        <MenuItem value={Port.COM_1}>{Port.COM_1}</MenuItem>
-                        <MenuItem value={Port.COM_2}>{Port.COM_2}</MenuItem>
-                        <MenuItem value={Port.COM_3}>{Port.COM_3}</MenuItem>
-                        <MenuItem value={Port.COM_4}>{Port.COM_4}</MenuItem>
-                    </Select>
-                </FormControl>
+                    value={selectedPort}
+                    onChange={handlePortChange}
+                />
             </LabelLine>
             <LabelLine label='Скорость соединения'>
-                <FormControl
+                <CustomSelect
                     className={styles.selectControl}
+                    data={speeds}
                     size='small'
-                >
-                    <Select
-                        value={selectedSpeed}
-                        onChange={handleSpeedChange}
-                    >
-                        <MenuItem value={256000}>256 000</MenuItem>
-                        <MenuItem value={257000}>257 000</MenuItem>
-                        <MenuItem value={258000}>258 000</MenuItem>
-                    </Select>
-                </FormControl>
+                    value={selectedSpeed}
+                    onChange={handleSpeedChange}
+                />
             </LabelLine>
             <LabelLine label='Язык'>
                 <CustomButton

@@ -1,0 +1,20 @@
+.header {
+    color: red;
+}
+
+.overflowYHidden {
+    overflow-y: scroll;
+    max-height: 22vh;
+}
+
+.rowTypes {
+    min-width: 125px;
+}
+
+.rowCals {
+    min-width: 110px;
+}
+
+.rowChannels {
+    min-width: 110px;
+}
