@@ -1,7 +1,3 @@
-.header {
-    color: red;
-}
-
 .overflowYHidden {
     overflow-y: scroll;
     max-height: 22vh;

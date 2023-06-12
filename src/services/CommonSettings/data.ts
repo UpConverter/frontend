@@ -41,4 +41,10 @@ export const cals_status = [
     { name: 'Cal 2', type: 'Coaxial', connected_to: 'Cal 1', current_chanel: 'SW2' },
     { name: 'Cal 3', type: 'Solid_state', connected_to: 'Cal 2', current_chanel: 'SW3' },
     { name: 'Cal 4', type: 'Coaxial', connected_to: 'Cal 2', current_chanel: 'SW1' },
+    { name: 'Cal 4', type: 'Coaxial', connected_to: 'Cal 2', current_chanel: 'SW1' },
+    { name: 'Cal 4', type: 'Coaxial', connected_to: 'Cal 2', current_chanel: 'SW1' },
+    { name: 'Cal 4', type: 'Coaxial', connected_to: 'Cal 2', current_chanel: 'SW1' },
+    { name: 'Cal 4', type: 'Coaxial', connected_to: 'Cal 2', current_chanel: 'SW1' },
+    { name: 'Cal 4', type: 'Coaxial', connected_to: 'Cal 2', current_chanel: 'SW1' },
+    { name: 'Cal 4', type: 'Coaxial', connected_to: 'Cal 2', current_chanel: 'SW1' },
 ];
