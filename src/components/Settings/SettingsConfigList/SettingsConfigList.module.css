@@ -1,6 +1,6 @@
 .overflowYHidden {
-    overflow-y: scroll;
-    max-height: 22vh;
+    overflow-y: auto;
+    max-height: 54vh;
 }
 
 .rowTypes {
@@ -13,4 +13,10 @@
 
 .rowChannels {
     min-width: 110px;
+}
+
+@media (width <= 1580px) {
+    .overflowYHidden {
+        max-height: 23vh;
+    }
 }

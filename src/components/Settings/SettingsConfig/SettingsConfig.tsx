@@ -41,8 +41,11 @@ export const SettingsConfig: FC = () => {
                     <DeleteOutlinedIcon />
                 </CustomButton>
             </LabelLine>
-            <SettingsConfigList label='Калибровочные модули' />
-            <SettingsConfigList label='Модули повышения частоты' />
+
+            <Box className={styles.flexBox}>
+                <SettingsConfigList label='Калибровочные модули' />
+                <SettingsConfigList label='Модули повышения частоты' />
+            </Box>
         </Box>
     );
 };

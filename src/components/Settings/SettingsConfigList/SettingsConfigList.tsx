@@ -19,7 +19,7 @@ export const SettingsConfigList: FC<ConfigListProps> = ({ label }) => {
     return (
         <LabelLine
             children_direction='column'
-            className={styles.header}
+            className={styles.flexItem}
             label={label}
             size='small'
         >

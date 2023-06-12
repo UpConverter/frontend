@@ -13,7 +13,7 @@
 }
 
 .menuItems {
-    flex: 1 0 auto;
+    height: 70vh;
 }
 
 .rightSide {
