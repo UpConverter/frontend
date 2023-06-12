@@ -3,8 +3,8 @@ import { FormControl, MenuItem, Select } from '@mui/material';
 import type { FC } from 'react';
 
 type Option = {
-    value: string | number;
-    label: string;
+    id: number;
+    value: number | string;
 };
 
 type CustomSelectProps = {
@@ -27,10 +27,10 @@ export const CustomSelect: FC<CustomSelectProps> = ({ value, onChange, data, siz
             >
                 {data.map((option) => (
                     <MenuItem
-                        key={option.value}
+                        key={option.id}
                         value={option.value}
                     >
-                        {option.label}
+                        {option.value}
                     </MenuItem>
                 ))}
             </Select>

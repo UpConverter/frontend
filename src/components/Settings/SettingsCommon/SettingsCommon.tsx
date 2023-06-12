@@ -3,7 +3,7 @@ import { CustomSelect } from '@components/UI/CustomSelect';
 import { LabelLine } from '@components/UI/LabelLine';
 import type { SelectChangeEvent } from '@mui/material';
 import { Box } from '@mui/material';
-import { ports, speeds } from '@services/CommonSettings/data';
+import { ports, speeds } from '@services/Settings/data';
 import type { FC } from 'react';
 import { useState } from 'react';
 
@@ -11,7 +11,7 @@ import styles from './SettingsCommon.module.css';
 export const SettingsCommon: FC = () => {
     // const ports = useGetListPorts;
     // const speeds = useGetListSpeeds;
-    const [selectedPort, setSelectedPort] = useState<string>('COM_1');
+    const [selectedPort, setSelectedPort] = useState<string>('COM 1');
     const [selectedSpeed, setSelectedSpeed] = useState<number>(256000);
     const [selectedLanguage, setSelectedLanguage] = useState('ru');
 

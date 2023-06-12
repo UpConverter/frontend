@@ -4,16 +4,18 @@ import { LabelLine } from '@components/UI/LabelLine';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import { Box } from '@mui/material';
-import { cals, cals_status, channels, types } from '@services/CommonSettings/data';
+import { cals, channels, types } from '@services/Settings/data';
+import type { DeviceStatus } from '@services/Settings/types';
 import type { FC } from 'react';
 
 import styles from './SettingsConfigList.module.css';
 
 type ConfigListProps = {
     label?: string;
+    devicesStatusData: DeviceStatus[];
 };
 
-export const SettingsConfigList: FC<ConfigListProps> = ({ label }) => {
+export const SettingsConfigList: FC<ConfigListProps> = ({ label, devicesStatusData }) => {
     // const configs = useGetListConfigs;
     // const cals = useGetListCals;
     return (
@@ -24,7 +26,7 @@ export const SettingsConfigList: FC<ConfigListProps> = ({ label }) => {
             size='small'
         >
             <Box className={styles.overflowYHidden}>
-                {cals_status?.map((cal, index) => (
+                {devicesStatusData?.map((cal, index) => (
                     <LabelLine
                         key={index}
                         label={cal.name}

@@ -4,7 +4,7 @@ import { LabelLine } from '@components/UI/LabelLine';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import type { SelectChangeEvent } from '@mui/material';
 import { Box } from '@mui/material';
-import { configs } from '@services/CommonSettings/data';
+import { cals_status, configs, modules_status } from '@services/Settings/data';
 import type { FC } from 'react';
 import { useState } from 'react';
 
@@ -14,7 +14,7 @@ import styles from './SettingsConfig.module.css';
 export const SettingsConfig: FC = () => {
     // const configs = useGetListConfigs;
     // const cals = useGetListCals;
-    const [selectedConfig, setSelectedConfig] = useState<string>(configs[0].label);
+    const [selectedConfig, setSelectedConfig] = useState<string>(configs[0].value);
 
     const handleConfigChange = (event: SelectChangeEvent<string | number>) => {
         const newConfig = event.target.value as string;
@@ -43,8 +43,14 @@ export const SettingsConfig: FC = () => {
             </LabelLine>
 
             <Box className={styles.flexBox}>
-                <SettingsConfigList label='Калибровочные модули' />
-                <SettingsConfigList label='Модули повышения частоты' />
+                <SettingsConfigList
+                    devicesStatusData={cals_status}
+                    label='Калибровочные модули'
+                />
+                <SettingsConfigList
+                    devicesStatusData={modules_status}
+                    label='Модули повышения частоты'
+                />
             </Box>
         </Box>
     );
