@@ -41,7 +41,8 @@ export const types = [
     { id: 2, value: 'Solid state' },
 ];
 
-// Далее ничего нового не появляется, эти данные будут получаться через join select запросы для удобного отображения на фронте
+// Далее ничего нового не появляется, эти данные будут получаться через
+// join select запросы для удобного отображения на фронте
 export const cals_status = [
     { name: 'Cal 1', type: 'Coaxial', connected_to: 'Cal 1', current_chanel: 'SW1' },
     { name: 'Cal 2', type: 'Coaxial', connected_to: 'Cal 1', current_chanel: 'SW2' },
