@@ -1,28 +1,33 @@
+import { useGetPortsPortsGetQuery, useGetSpeedsSpeedsGetQuery } from '@api/generatedApi';
 import { CustomButton } from '@components/UI/CustomButton';
 import { CustomSelect } from '@components/UI/CustomSelect';
 import { LabelLine } from '@components/UI/LabelLine';
+import { useAppDispatch } from '@hooks/useAppDispatch';
 import type { SelectChangeEvent } from '@mui/material';
 import { Box } from '@mui/material';
-import { ports, speeds } from '@services/Settings/data';
+import { attemptActions } from '@store/entities/attempt';
+import { getAttempt } from '@store/entities/attempt';
 import type { FC } from 'react';
 import { useState } from 'react';
+import { useSelector } from 'react-redux';
 
 import styles from './SettingsCommon.module.css';
 export const SettingsCommon: FC = () => {
-    // const ports = useGetListPorts;
-    // const speeds = useGetListSpeeds;
-    const [selectedPort, setSelectedPort] = useState<string>('COM 1');
-    const [selectedSpeed, setSelectedSpeed] = useState<number>(256000);
+    const { data: ports } = useGetPortsPortsGetQuery({ skip: 0, limit: 100 });
+    const { data: speeds } = useGetSpeedsSpeedsGetQuery({ skip: 0, limit: 100 });
+    const dispatch = useAppDispatch();
+    const attempt = useSelector(getAttempt);
+
     const [selectedLanguage, setSelectedLanguage] = useState('ru');
 
     const handlePortChange = (event: SelectChangeEvent<string | number>) => {
         const newPort = event.target.value as string;
-        setSelectedPort(newPort);
+        dispatch(attemptActions.setPort(newPort));
     };
 
     const handleSpeedChange = (event: SelectChangeEvent<string | number>) => {
         const newSpeed = event.target.value as number;
-        setSelectedSpeed(newSpeed);
+        dispatch(attemptActions.setSpeed(newSpeed));
     };
 
     const handleLanguageChange = (language: string) => {
@@ -34,9 +39,9 @@ export const SettingsCommon: FC = () => {
             <LabelLine label='Порт подключения'>
                 <CustomSelect
                     className={styles.selectControl}
-                    data={ports}
+                    data={ports?.map((port) => ({ id: port.id, value: port.name }))}
                     size='small'
-                    value={selectedPort}
+                    value={attempt.port}
                     onChange={handlePortChange}
                 />
             </LabelLine>
@@ -45,7 +50,7 @@ export const SettingsCommon: FC = () => {
                     className={styles.selectControl}
                     data={speeds}
                     size='small'
-                    value={selectedSpeed}
+                    value={attempt.speed}
                     onChange={handleSpeedChange}
                 />
             </LabelLine>

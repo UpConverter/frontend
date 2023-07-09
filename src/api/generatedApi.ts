@@ -8,13 +8,7 @@ const injectedRtkApi = api
         endpoints: (build) => ({
             getPortsPortsGet: build.query<GetPortsPortsGetApiResponse, GetPortsPortsGetApiArg>({
                 query: (queryArg) => ({ url: `/ports/`, params: { skip: queryArg.skip, limit: queryArg.limit } }),
-                providesTags: (result) =>
-                    result
-                        ? [
-                              ...result.map(({ id }) => ({ type: 'ports' as const, id })),
-                              { type: 'ports', id: 'LISTPORTS' },
-                          ]
-                        : [{ type: 'ports', id: 'LISTPORTS' }],
+                providesTags: ['ports'],
             }),
             getSpeedsSpeedsGet: build.query<GetSpeedsSpeedsGetApiResponse, GetSpeedsSpeedsGetApiArg>({
                 query: (queryArg) => ({ url: `/speeds/`, params: { skip: queryArg.skip, limit: queryArg.limit } }),
@@ -60,9 +54,9 @@ const injectedRtkApi = api
                 }),
                 providesTags: ['devices'],
             }),
-            getDeviceAdditionalStatesDevicesChannelsGet: build.query<
-                GetDeviceAdditionalStatesDevicesChannelsGetApiResponse,
-                GetDeviceAdditionalStatesDevicesChannelsGetApiArg
+            getDeviceChannelsDevicesChannelsGet: build.query<
+                GetDeviceChannelsDevicesChannelsGetApiResponse,
+                GetDeviceChannelsDevicesChannelsGetApiArg
             >({
                 query: (queryArg) => ({
                     url: `/devices/channels`,
@@ -289,9 +283,8 @@ export type GetDeviceAdditionalStatesDevicesAdditionalStatesGetApiArg = {
     skip?: number;
     limit?: number;
 };
-export type GetDeviceAdditionalStatesDevicesChannelsGetApiResponse =
-    /** status 200 Successful Response */ DeviceAdditionalState[];
-export type GetDeviceAdditionalStatesDevicesChannelsGetApiArg = {
+export type GetDeviceChannelsDevicesChannelsGetApiResponse = /** status 200 Successful Response */ DeviceChannel[];
+export type GetDeviceChannelsDevicesChannelsGetApiArg = {
     skip?: number;
     limit?: number;
 };
@@ -390,7 +383,8 @@ export type CreateNewAttemptAttemptsPostApiResponse = /** status 200 Successful 
 export type CreateNewAttemptAttemptsPostApiArg = {
     attemptCreate: AttemptCreate;
 };
-export type GetLastSuccessAttemptAttemptsLastSuccessGetApiResponse = /** status 200 Successful Response */ AttemptFull;
+export type GetLastSuccessAttemptAttemptsLastSuccessGetApiResponse =
+    /** status 200 Successful Response */ AttemptRelated;
 export type GetLastSuccessAttemptAttemptsLastSuccessGetApiArg = void;
 export type UpdateExistingAttemptAttemptsAttemptIdPutApiResponse = /** status 200 Successful Response */ Attempt;
 export type UpdateExistingAttemptAttemptsAttemptIdPutApiArg = {
@@ -430,6 +424,10 @@ export type DeviceState = {
     name: string;
 };
 export type DeviceAdditionalState = {
+    id: number;
+    name: string;
+};
+export type DeviceChannel = {
     id: number;
     name: string;
 };
@@ -517,27 +515,12 @@ export type AttemptCreate = {
     speed_id: number;
     port_id: number;
 };
-export type Connections2 = {
-    id: number;
-    device_id: number;
-    device_name: string;
-    model_name?: string;
-    state_name?: string;
-    connected_to_device_id?: number;
-    connected_to_device?: string;
-    connected_to_device_channel_id?: number;
-    connected_to_device_channel?: string;
-};
-export type AttemptName = {
+export type AttemptRelated = {
     configuration_id: number;
-    speed_id: number;
-    port_id: number;
-    config_name: string;
-};
-export type AttemptFull = {
-    config_cals: Connections2[];
-    config_upconv: Connections2[];
-    attempt: AttemptName;
+    configuration: string;
+    speed: number;
+    port: string;
+    success: boolean;
 };
 export const {
     useGetPortsPortsGetQuery,
@@ -546,7 +529,7 @@ export const {
     useGetDeviceModelsDevicesModelsGetQuery,
     useGetDeviceStatesDevicesStatesGetQuery,
     useGetDeviceAdditionalStatesDevicesAdditionalStatesGetQuery,
-    useGetDeviceAdditionalStatesDevicesChannelsGetQuery,
+    useGetDeviceChannelsDevicesChannelsGetQuery,
     useGetDevicesByTypeDevicesByTypeGetQuery,
     useGetDevicesByTypesDevicesByTypesGetQuery,
     useGetDevicesByTypesRelatedDevicesByTypesRelatedGetQuery,

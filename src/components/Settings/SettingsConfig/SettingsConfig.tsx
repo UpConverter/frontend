@@ -1,24 +1,28 @@
+import { useGetConfigsConfigsGetQuery } from '@api/generatedApi';
+import { SettingsConfigDevices } from '@components/Settings/SettingsConfigDevices/SettingsConfigDevices';
 import { CustomButton } from '@components/UI/CustomButton';
 import { CustomSelect } from '@components/UI/CustomSelect';
 import { LabelLine } from '@components/UI/LabelLine';
+import { useAppDispatch } from '@hooks/useAppDispatch';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import type { SelectChangeEvent } from '@mui/material';
 import { Box } from '@mui/material';
-import { cals_status, configs, modules_status } from '@services/Settings/data';
+import { attemptActions } from '@store/entities/attempt';
+import { getAttempt } from '@store/entities/attempt';
 import type { FC } from 'react';
-import { useState } from 'react';
+import { useSelector } from 'react-redux';
 
-import { SettingsConfigList } from '../SettingsConfigList/SettingsConfigList';
 import styles from './SettingsConfig.module.css';
 
 export const SettingsConfig: FC = () => {
-    // const configs = useGetListConfigs;
-    // const cals = useGetListCals;
-    const [selectedConfig, setSelectedConfig] = useState<string>(configs[0].value);
+    const { data: configs } = useGetConfigsConfigsGetQuery();
+    const dispatch = useAppDispatch();
+    const attempt = useSelector(getAttempt);
 
     const handleConfigChange = (event: SelectChangeEvent<string | number>) => {
-        const newConfig = event.target.value as string;
-        setSelectedConfig(newConfig);
+        const newConfigName = event.target.value as string;
+        const newConfiguration = configs?.find((config) => config.name === newConfigName);
+        dispatch(attemptActions.setConfiguration(newConfiguration));
     };
 
     return (
@@ -30,9 +34,9 @@ export const SettingsConfig: FC = () => {
             >
                 <CustomSelect
                     className={styles.selectConfig}
-                    data={configs}
+                    data={configs?.map((config) => ({ id: config.id, value: config.name }))}
                     size='small'
-                    value={selectedConfig}
+                    value={attempt?.configuration.name || ''}
                     onChange={handleConfigChange}
                 />
                 <CustomButton variant='outlined'>Сохранить</CustomButton>
@@ -41,17 +45,7 @@ export const SettingsConfig: FC = () => {
                     <DeleteOutlinedIcon />
                 </CustomButton>
             </LabelLine>
-
-            <Box className={styles.flexBox}>
-                <SettingsConfigList
-                    devicesStatusData={cals_status}
-                    label='Калибровочные модули'
-                />
-                <SettingsConfigList
-                    devicesStatusData={modules_status}
-                    label='Модули повышения частоты'
-                />
-            </Box>
+            {attempt?.configuration.id && <SettingsConfigDevices configId={attempt.configuration.id} />}
         </Box>
     );
 };

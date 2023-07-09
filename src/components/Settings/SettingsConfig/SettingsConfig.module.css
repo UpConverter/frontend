@@ -5,16 +5,3 @@
 .mb {
     margin-bottom: 30px;
 }
-
-.flexBox {
-    display: flex;
-    flex-direction: row;
-    gap: 0 40px;
-    justify-content: space-between;
-}
-
-@media (width <= 1580px) {
-    .flexBox {
-        flex-direction: column;
-    }
-}

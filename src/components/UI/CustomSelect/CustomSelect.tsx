@@ -9,7 +9,7 @@ type Option = {
 
 type CustomSelectProps = {
     value?: string | number;
-    data: Option[];
+    data: Option[] | undefined;
     onChange?: (event: SelectChangeEvent<string | number>, child: React.ReactNode) => void;
     size?: 'small' | 'medium';
     className?: string;
@@ -25,7 +25,7 @@ export const CustomSelect: FC<CustomSelectProps> = ({ value, onChange, data, siz
                 value={value}
                 onChange={onChange}
             >
-                {data.map((option) => (
+                {data?.map((option) => (
                     <MenuItem
                         key={option.id}
                         value={option.value}

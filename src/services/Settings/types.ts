@@ -27,10 +27,3 @@ export interface Type {
     id: number;
     value: string;
 }
-
-export interface DeviceStatus {
-    name: string;
-    type: string;
-    connected_to: string;
-    current_chanel: string;
-}
