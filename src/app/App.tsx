@@ -1,4 +1,4 @@
-import { useGetLastSuccessAttemptAttemptsLastSuccessGetQuery } from '@api/generatedApi';
+import { useGetLastAttemptAttemptsLastGetQuery } from '@api/generatedApi';
 import { Header } from '@components/Header';
 import { useAppDispatch } from '@hooks/useAppDispatch';
 import { Box } from '@mui/material';
@@ -9,8 +9,8 @@ import styles from './App.module.css';
 import { AppRouter } from './providers/AppRouter';
 export const App: FC = () => {
     const dispatch = useAppDispatch();
-    const { data: lustSuccess } = useGetLastSuccessAttemptAttemptsLastSuccessGetQuery();
-    dispatch(attemptActions.setAttempt(lustSuccess));
+    const { data: lustAttempt } = useGetLastAttemptAttemptsLastGetQuery();
+    dispatch(attemptActions.setAttempt(lustAttempt));
 
     return (
         <div>

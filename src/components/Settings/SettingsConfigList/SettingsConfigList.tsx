@@ -1,9 +1,15 @@
-import { type Connections, type DeviceChannel, type DeviceModel } from '@api/generatedApi';
+import {
+    type Connections,
+    type DeviceChannel,
+    type DeviceModel,
+    useUpdateExistingConnectionConnectionsConnectionsConnectionIdPutMutation,
+} from '@api/generatedApi';
 import { CustomButton } from '@components/UI/CustomButton';
 import { CustomSelect } from '@components/UI/CustomSelect';
 import { LabelLine } from '@components/UI/LabelLine';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
+import type { SelectChangeEvent } from '@mui/material';
 import { Box } from '@mui/material';
 import type { FC } from 'react';
 
@@ -17,6 +23,22 @@ type ConfigListProps = {
     models: DeviceModel[] | undefined;
 };
 export const SettingsConfigList: FC<ConfigListProps> = ({ label, connections, channels, cals, models }) => {
+    const [updateConnection] = useUpdateExistingConnectionConnectionsConnectionsConnectionIdPutMutation();
+
+    const handleChannelChange = (connection: Connections, event: SelectChangeEvent<string | number>) => {
+        const newChannelName = event.target.value as string;
+        const newChannel = channels?.find((channel) => channel.name === newChannelName);
+
+        updateConnection({
+            connectionId: connection.id,
+            srcConnectionModelsConnectionCreate: {
+                device_id: connection.device_id,
+                connected_to_device_id: connection.connected_to_device_id || 0,
+                connected_to_device_channel_id: newChannel?.id || 0,
+            },
+        });
+    };
+
     return (
         <LabelLine
             children_direction='column'
@@ -48,6 +70,7 @@ export const SettingsConfigList: FC<ConfigListProps> = ({ label, connections, ch
                             data={channels?.map((channel) => ({ id: channel.id, value: channel.name }))}
                             size='small'
                             value={connection.connected_to_device_channel}
+                            onChange={(value) => handleChannelChange(connection, value)}
                         />
                         <CustomButton color='error'>
                             <DeleteOutlinedIcon />

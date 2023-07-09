@@ -220,8 +220,15 @@ const injectedRtkApi = api
                 CreateNewAttemptAttemptsPostApiResponse,
                 CreateNewAttemptAttemptsPostApiArg
             >({
-                query: (queryArg) => ({ url: `/attempts/`, method: 'POST', body: queryArg.attemptCreate }),
+                query: (queryArg) => ({ url: `/attempts/`, method: 'POST', body: queryArg.attemptRelatedCreate }),
                 invalidatesTags: ['attempts'],
+            }),
+            getLastAttemptAttemptsLastGet: build.query<
+                GetLastAttemptAttemptsLastGetApiResponse,
+                GetLastAttemptAttemptsLastGetApiArg
+            >({
+                query: () => ({ url: `/attempts/last` }),
+                providesTags: ['attempts'],
             }),
             getLastSuccessAttemptAttemptsLastSuccessGet: build.query<
                 GetLastSuccessAttemptAttemptsLastSuccessGetApiResponse,
@@ -381,8 +388,10 @@ export type GetAttemptsAttemptsGetApiArg = {
 };
 export type CreateNewAttemptAttemptsPostApiResponse = /** status 200 Successful Response */ Attempt;
 export type CreateNewAttemptAttemptsPostApiArg = {
-    attemptCreate: AttemptCreate;
+    attemptRelatedCreate: AttemptRelatedCreate;
 };
+export type GetLastAttemptAttemptsLastGetApiResponse = /** status 200 Successful Response */ AttemptRelated;
+export type GetLastAttemptAttemptsLastGetApiArg = void;
 export type GetLastSuccessAttemptAttemptsLastSuccessGetApiResponse =
     /** status 200 Successful Response */ AttemptRelated;
 export type GetLastSuccessAttemptAttemptsLastSuccessGetApiArg = void;
@@ -510,17 +519,22 @@ export type Attempt = {
     success: boolean;
     timestamp: string;
 };
+export type AttemptRelatedCreate = {
+    configuration_id: number;
+    speed: number;
+    port: string;
+};
+export type AttemptRelated = {
+    configuration_id: number;
+    speed: number;
+    port: string;
+    configuration: string;
+    success: boolean;
+};
 export type AttemptCreate = {
     configuration_id: number;
     speed_id: number;
     port_id: number;
-};
-export type AttemptRelated = {
-    configuration_id: number;
-    configuration: string;
-    speed: number;
-    port: string;
-    success: boolean;
 };
 export const {
     useGetPortsPortsGetQuery,
@@ -550,6 +564,7 @@ export const {
     useGetConfigUpconvConfigsConfigIdUpconvertersGetQuery,
     useGetAttemptsAttemptsGetQuery,
     useCreateNewAttemptAttemptsPostMutation,
+    useGetLastAttemptAttemptsLastGetQuery,
     useGetLastSuccessAttemptAttemptsLastSuccessGetQuery,
     useUpdateExistingAttemptAttemptsAttemptIdPutMutation,
     useDeleteExistingAttemptAttemptsAttemptIdDeleteMutation,
