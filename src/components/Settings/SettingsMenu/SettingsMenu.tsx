@@ -3,6 +3,8 @@ import { Alert } from '@components/UI/Alert';
 import { CustomButton } from '@components/UI/CustomButton';
 import { Box, CircularProgress, Divider, Snackbar } from '@mui/material';
 import { getAttemptConfigId, getAttemptPort, getAttemptSpeed, getAttemptSuccess } from '@store/entities/attempt';
+import { ERROR_CREATE_ATTEMPT, SUCCESS_CREATE_ATTEMPT } from '@store/entities/attempt/constants/errors';
+import { MenuItems } from '@store/entities/attempt/constants/labels';
 import type { FC } from 'react';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -10,7 +12,6 @@ import { useSelector } from 'react-redux';
 import { SettingsCommon } from '../SettingsCommon/SettingsCommon';
 import { SettingsConfig } from '../SettingsConfig/SettingsConfig';
 import { SettingsMenuItem } from '../SettingsMenuItem/SettingsMenuItem';
-import { ERROR_CREATE_ATTEMPT, menuItems, SUCCESS_CREATE_ATTEMPT } from './consts';
 import styles from './SettingsMenu.module.css';
 
 export const SettingsMenu: FC = () => {
@@ -19,7 +20,11 @@ export const SettingsMenu: FC = () => {
     const port = useSelector(getAttemptPort);
     const success = useSelector(getAttemptSuccess);
     const [createNewAttempt, { isLoading }] = useCreateNewAttemptAttemptsPostMutation();
-    const [selectedType, setSelectedType] = useState('common');
+    const [selectedType, setSelectedType] = useState<MenuItems>(() => {
+        const storedType = localStorage.getItem('selectedType');
+
+        return storedType ? JSON.parse(storedType) : MenuItems.CUMMON;
+    });
     const [showSnackbar, setShowSnackbar] = useState(false);
 
     const handleApplyClick = () => {
@@ -40,8 +45,9 @@ export const SettingsMenu: FC = () => {
             });
     };
 
-    const handleTypeChange = (type: string) => {
+    const handleTypeChange = (type: MenuItems) => {
         setSelectedType(type);
+        localStorage.setItem('selectedType', JSON.stringify(type));
     };
 
     const handleSnackbarClose = () => {
@@ -50,9 +56,9 @@ export const SettingsMenu: FC = () => {
 
     const renderSettingsComponent = () => {
         switch (selectedType) {
-            case 'common':
+            case MenuItems.CUMMON:
                 return <SettingsCommon />;
-            case 'config':
+            case MenuItems.CONFIG:
                 return <SettingsConfig />;
             default:
                 return null;
@@ -63,12 +69,12 @@ export const SettingsMenu: FC = () => {
         <Box className={styles.flex}>
             <Box className={styles.leftSide}>
                 <Box className={styles.menuItems}>
-                    {menuItems.map((item) => (
+                    {Object.values(MenuItems).map((item) => (
                         <SettingsMenuItem
-                            isSelected={selectedType === item.id}
-                            key={item.id}
-                            label={item.label}
-                            onClick={() => handleTypeChange(item.id)}
+                            isSelected={selectedType === item}
+                            key={item}
+                            label={item}
+                            onClick={() => handleTypeChange(item)}
                         />
                     ))}
                 </Box>

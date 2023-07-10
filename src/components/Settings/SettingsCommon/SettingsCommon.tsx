@@ -37,22 +37,26 @@ export const SettingsCommon: FC = () => {
     return (
         <Box>
             <LabelLine label='Порт подключения'>
-                <CustomSelect
-                    className={styles.selectControl}
-                    data={ports?.map((port) => ({ id: port.id, value: port.name }))}
-                    size='small'
-                    value={attempt.port}
-                    onChange={handlePortChange}
-                />
+                {ports && (
+                    <CustomSelect
+                        className={styles.selectControl}
+                        data={ports.map((port) => ({ id: port.id, value: port.name }))}
+                        size='small'
+                        value={attempt.port}
+                        onChange={handlePortChange}
+                    />
+                )}
             </LabelLine>
             <LabelLine label='Скорость соединения'>
-                <CustomSelect
-                    className={styles.selectControl}
-                    data={speeds}
-                    size='small'
-                    value={attempt.speed}
-                    onChange={handleSpeedChange}
-                />
+                {speeds && (
+                    <CustomSelect
+                        className={styles.selectControl}
+                        data={speeds}
+                        size='small'
+                        value={attempt.speed}
+                        onChange={handleSpeedChange}
+                    />
+                )}
             </LabelLine>
             <LabelLine label='Язык'>
                 <CustomButton

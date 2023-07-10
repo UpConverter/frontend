@@ -133,7 +133,7 @@ const injectedRtkApi = api
                 query: (queryArg) => ({
                     url: `/connections/connections/${queryArg.connectionId}`,
                     method: 'PUT',
-                    body: queryArg.srcConnectionModelsConnectionCreate,
+                    body: queryArg.connectionRelatedCreate,
                 }),
                 invalidatesTags: ['connections'],
             }),
@@ -194,7 +194,7 @@ const injectedRtkApi = api
                 query: (queryArg) => ({
                     url: `/configs/${queryArg.configId}/connections`,
                     method: 'POST',
-                    body: queryArg.srcConfigurationModelsConnectionCreate,
+                    body: queryArg.connectionCreate,
                 }),
                 invalidatesTags: ['configs'],
             }),
@@ -335,7 +335,7 @@ export type UpdateExistingConnectionConnectionsConnectionsConnectionIdPutApiResp
     /** status 200 Successful Response */ Connection;
 export type UpdateExistingConnectionConnectionsConnectionsConnectionIdPutApiArg = {
     connectionId: number;
-    srcConnectionModelsConnectionCreate: ConnectionCreate;
+    connectionRelatedCreate: ConnectionRelatedCreate;
 };
 export type DeleteExistingConnectionConnectionsConnectionsConnectionIdDeleteApiResponse =
     /** status 200 Successful Response */ any;
@@ -367,10 +367,10 @@ export type GetConfigConnectionsConfigsConfigIdConnectionsGetApiArg = {
     configId: number;
 };
 export type CreateNewConnectionConfigsConfigIdConnectionsPostApiResponse =
-    /** status 200 Successful Response */ Connection2;
+    /** status 200 Successful Response */ Connection;
 export type CreateNewConnectionConfigsConfigIdConnectionsPostApiArg = {
     configId: number;
-    srcConfigurationModelsConnectionCreate: ConnectionCreate2;
+    connectionCreate: ConnectionCreate;
 };
 export type GetConfigCalsConfigsConfigIdCalsGetApiResponse = /** status 200 Successful Response */ Connections[];
 export type GetConfigCalsConfigsConfigIdCalsGetApiArg = {
@@ -390,10 +390,10 @@ export type CreateNewAttemptAttemptsPostApiResponse = /** status 200 Successful 
 export type CreateNewAttemptAttemptsPostApiArg = {
     attemptRelatedCreate: AttemptRelatedCreate;
 };
-export type GetLastAttemptAttemptsLastGetApiResponse = /** status 200 Successful Response */ AttemptRelated;
+export type GetLastAttemptAttemptsLastGetApiResponse = /** status 200 Successful Response */ AttemptConnections;
 export type GetLastAttemptAttemptsLastGetApiArg = void;
 export type GetLastSuccessAttemptAttemptsLastSuccessGetApiResponse =
-    /** status 200 Successful Response */ AttemptRelated;
+    /** status 200 Successful Response */ AttemptConnections;
 export type GetLastSuccessAttemptAttemptsLastSuccessGetApiArg = void;
 export type UpdateExistingAttemptAttemptsAttemptIdPutApiResponse = /** status 200 Successful Response */ Attempt;
 export type UpdateExistingAttemptAttemptsAttemptIdPutApiArg = {
@@ -466,16 +466,16 @@ export type DeviceRelatedCreate = {
     additional_state_name?: string;
 };
 export type Connection = {
-    id: number;
-    configuration_id: number;
     device_id: number;
     connected_to_device_id?: number;
     connected_to_device_channel_id: number;
+    id: number;
+    configuration_id: number;
 };
-export type ConnectionCreate = {
-    device_id: number;
-    connected_to_device_id?: number;
-    connected_to_device_channel_id?: number;
+export type ConnectionRelatedCreate = {
+    device: string;
+    connected_to_device?: string;
+    connected_to_device_channel?: string;
 };
 export type Configuration = {
     name: string;
@@ -485,28 +485,18 @@ export type ConfigurationCreate = {
     name: string;
 };
 export type Connections = {
+    device: string;
+    connected_to_device?: string;
+    connected_to_device_channel?: string;
     id: number;
-    device_id: number;
-    device_name: string;
     model_name?: string;
     state_name?: string;
-    connected_to_device_id?: number;
-    connected_to_device?: string;
-    connected_to_device_channel_id?: number;
-    connected_to_device_channel?: string;
 };
 export type ConnectionsTyped = {
     config_cals: Connections[];
     config_upconv: Connections[];
 };
-export type Connection2 = {
-    id: number;
-    configuration_id: number;
-    device_id: number;
-    connected_to_device_id?: number;
-    connected_to_device_channel_id: number;
-};
-export type ConnectionCreate2 = {
+export type ConnectionCreate = {
     device_id: number;
     connected_to_device_id?: number;
     connected_to_device_channel_id?: number;
@@ -530,6 +520,11 @@ export type AttemptRelated = {
     port: string;
     configuration: string;
     success: boolean;
+};
+export type AttemptConnections = {
+    config_cals: Connections[];
+    config_upconv: Connections[];
+    attempt: AttemptRelated;
 };
 export type AttemptCreate = {
     configuration_id: number;

@@ -8,3 +8,28 @@
     width: 95vw;
     height: 68vh;
 }
+
+.errorContainer {
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    height: 68vh;
+}
+
+.errorBox {
+    padding: 20px;
+
+    text-align: center;
+
+    background-color: #feebeb;
+    border: 1px solid #f93e3e;
+    border-radius: 15px;
+}
+
+.button {
+    align-self: center;
+    border-radius: 25px;
+}

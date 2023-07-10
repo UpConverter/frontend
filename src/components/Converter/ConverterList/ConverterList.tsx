@@ -1,26 +1,52 @@
-import { Box } from '@mui/material';
-import { ConverterMode } from '@services/Converters/types';
-import type { FC } from 'react';
+import { getRouteSettings } from '@app/providers/AppRouter';
+import { Box, Button, Typography } from '@mui/material';
+import { getAttemptSuccess, getAttemptUpconv } from '@store/entities/attempt';
+import { ERROR_SUCCESS_ATTEMPT_BEGIN, ERROR_SUCCESS_ATTEMPT_END } from '@store/entities/attempt/constants/errors';
+import { useSelector } from 'react-redux';
+import { Link as RouterLink } from 'react-router-dom';
 
 import { ConverterItem } from '../ConverterItem/ConverterItem';
 import styles from './ConverterList.module.css';
-export const ConverterList: FC = () => {
-    const converterItems = Array.from(Array(15), (_, index) => ({
-        id: (index + 1).toString(),
-        info: `Information about converter ${index + 1}`,
-        mode: index % 3 === 0 ? ConverterMode.Cryo : index % 3 === 1 ? ConverterMode.Cal : ConverterMode.Off,
-        name: `UpConverter #${index + 1}`,
-    }));
+
+export const ConverterList = () => {
+    const attemptSuccess = useSelector(getAttemptSuccess);
+    const upconverters = useSelector(getAttemptUpconv);
+
+    if (!attemptSuccess) {
+        return (
+            <Box className={styles.errorContainer}>
+                <Box className={styles.errorBox}>
+                    <Typography
+                        gutterBottom
+                        variant='h6'
+                    >
+                        {ERROR_SUCCESS_ATTEMPT_BEGIN}
+                    </Typography>
+
+                    <Button
+                        className={styles.button}
+                        color='primary'
+                        component={RouterLink}
+                        to={getRouteSettings()}
+                        variant='contained'
+                    >
+                        {ERROR_SUCCESS_ATTEMPT_END}
+                    </Button>
+                </Box>
+            </Box>
+        );
+    }
 
     return (
         <Box className={styles.listContainer}>
-            {converterItems.map((item) => (
+            {upconverters.map((upconv, idx) => (
                 <ConverterItem
-                    id={item.id}
-                    info={item.info}
-                    key={item.id}
-                    mode={item.mode}
-                    name={item.name}
+                    connected_to_device={upconv.connected_to_device}
+                    connected_to_device_channel={upconv.connected_to_device_channel}
+                    device={upconv.device}
+                    id={upconv.id}
+                    key={idx}
+                    state_name={upconv.state_name}
                 />
             ))}
         </Box>

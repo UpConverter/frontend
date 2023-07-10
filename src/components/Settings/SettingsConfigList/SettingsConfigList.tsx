@@ -1,9 +1,4 @@
-import {
-    type Connections,
-    type DeviceChannel,
-    type DeviceModel,
-    useUpdateExistingConnectionConnectionsConnectionsConnectionIdPutMutation,
-} from '@api/generatedApi';
+import { type Connections, type DeviceChannel, type DeviceModel } from '@api/generatedApi';
 import { CustomButton } from '@components/UI/CustomButton';
 import { CustomSelect } from '@components/UI/CustomSelect';
 import { LabelLine } from '@components/UI/LabelLine';
@@ -11,33 +6,29 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import type { SelectChangeEvent } from '@mui/material';
 import { Box } from '@mui/material';
+import { CALS_LABEL, UPCONV_LABEL } from '@store/entities/attempt/constants/labels';
+import { DeviceType } from '@store/entities/attempt/types/DeviceSchema';
 import type { FC } from 'react';
 
 import styles from './SettingsConfigList.module.css';
 
 type ConfigListProps = {
-    label?: string;
+    deviceType: DeviceType;
     connections: Connections[] | undefined;
     cals: Connections[] | undefined;
     channels: DeviceChannel[] | undefined;
     models: DeviceModel[] | undefined;
+    onChannelChange: (index: number, event: SelectChangeEvent<string | number>, deviceType: DeviceType) => void;
 };
-export const SettingsConfigList: FC<ConfigListProps> = ({ label, connections, channels, cals, models }) => {
-    const [updateConnection] = useUpdateExistingConnectionConnectionsConnectionsConnectionIdPutMutation();
-
-    const handleChannelChange = (connection: Connections, event: SelectChangeEvent<string | number>) => {
-        const newChannelName = event.target.value as string;
-        const newChannel = channels?.find((channel) => channel.name === newChannelName);
-
-        updateConnection({
-            connectionId: connection.id,
-            srcConnectionModelsConnectionCreate: {
-                device_id: connection.device_id,
-                connected_to_device_id: connection.connected_to_device_id || 0,
-                connected_to_device_channel_id: newChannel?.id || 0,
-            },
-        });
-    };
+export const SettingsConfigList: FC<ConfigListProps> = ({
+    deviceType,
+    connections,
+    channels,
+    cals,
+    models,
+    onChannelChange,
+}) => {
+    const label = DeviceType.CAL ? CALS_LABEL : UPCONV_LABEL;
 
     return (
         <LabelLine
@@ -50,7 +41,7 @@ export const SettingsConfigList: FC<ConfigListProps> = ({ label, connections, ch
                 {connections?.map((connection, index) => (
                     <LabelLine
                         key={index}
-                        label={connection.device_name}
+                        label={connection.device}
                         size='medium'
                     >
                         <CustomSelect
@@ -61,7 +52,7 @@ export const SettingsConfigList: FC<ConfigListProps> = ({ label, connections, ch
                         />
                         <CustomSelect
                             className={styles.rowCals}
-                            data={cals?.map((cal) => ({ id: cal.id, value: cal.device_name }))}
+                            data={cals?.map((cal) => ({ id: cal.id, value: cal.device }))}
                             size='small'
                             value={connection.connected_to_device}
                         />
@@ -70,7 +61,7 @@ export const SettingsConfigList: FC<ConfigListProps> = ({ label, connections, ch
                             data={channels?.map((channel) => ({ id: channel.id, value: channel.name }))}
                             size='small'
                             value={connection.connected_to_device_channel}
-                            onChange={(value) => handleChannelChange(connection, value)}
+                            onChange={(value) => onChannelChange(index, value, deviceType)}
                         />
                         <CustomButton color='error'>
                             <DeleteOutlinedIcon />
