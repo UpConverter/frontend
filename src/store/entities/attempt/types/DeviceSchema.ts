@@ -1,8 +1,8 @@
 import { attemptActions } from '@store/entities/attempt';
 
 export enum DeviceType {
-    UPCONV = 'upconv',
-    CAL = 'cal',
+    UPCONV = 'UPCONVERTER',
+    CAL = 'CAL',
 }
 
 export const connectionActions = {

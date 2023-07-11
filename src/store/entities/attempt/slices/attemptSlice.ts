@@ -47,11 +47,9 @@ const attemptSlice = createSlice({
         },
         setUpconv: (state, action: PayloadAction<Connections[]>) => {
             state.upconv = action.payload;
-            state.success = false;
         },
         setCals: (state, action: PayloadAction<Connections[]>) => {
             state.cals = action.payload;
-            state.success = false;
         },
     },
 });

@@ -1,4 +1,5 @@
 import { type Connections, type DeviceChannel, type DeviceModel } from '@api/generatedApi';
+import { DeviceModal } from '@components/Settings/DeviceModal/DeviceModal';
 import { CustomButton } from '@components/UI/CustomButton';
 import { CustomSelect } from '@components/UI/CustomSelect';
 import { LabelLine } from '@components/UI/LabelLine';
@@ -6,9 +7,11 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import type { SelectChangeEvent } from '@mui/material';
 import { Box } from '@mui/material';
+import { getAttemptConfigId } from '@store/entities/attempt';
 import { CALS_LABEL, UPCONV_LABEL } from '@store/entities/attempt/constants/labels';
 import { DeviceType } from '@store/entities/attempt/types/DeviceSchema';
-import type { FC } from 'react';
+import { type FC, useState } from 'react';
+import { useSelector } from 'react-redux';
 
 import styles from './SettingsConfigList.module.css';
 
@@ -18,6 +21,7 @@ type ConfigListProps = {
     cals: Connections[] | undefined;
     channels: DeviceChannel[] | undefined;
     models: DeviceModel[] | undefined;
+    onConnectionDelete: (index: number, deviceType: DeviceType) => void;
     onChannelChange: (index: number, event: SelectChangeEvent<string | number>, deviceType: DeviceType) => void;
 };
 export const SettingsConfigList: FC<ConfigListProps> = ({
@@ -26,14 +30,24 @@ export const SettingsConfigList: FC<ConfigListProps> = ({
     channels,
     cals,
     models,
+    onConnectionDelete,
     onChannelChange,
 }) => {
-    const label = DeviceType.CAL ? CALS_LABEL : UPCONV_LABEL;
+    const configId = useSelector(getAttemptConfigId);
+    const label = deviceType === DeviceType.CAL ? CALS_LABEL : UPCONV_LABEL;
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const handleOpenModal = () => {
+        setIsModalOpen(true);
+    };
+
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+    };
 
     return (
         <LabelLine
             children_direction='column'
-            className={styles.flexItem}
             label={label}
             size='small'
         >
@@ -63,15 +77,27 @@ export const SettingsConfigList: FC<ConfigListProps> = ({
                             value={connection.connected_to_device_channel}
                             onChange={(value) => onChannelChange(index, value, deviceType)}
                         />
-                        <CustomButton color='error'>
+                        <CustomButton
+                            color='error'
+                            onClick={() => onConnectionDelete(index, deviceType)}
+                        >
                             <DeleteOutlinedIcon />
                         </CustomButton>
                     </LabelLine>
                 ))}
             </Box>
-            <CustomButton>
+            <CustomButton onClick={handleOpenModal}>
                 <AddCircleOutlineIcon />
             </CustomButton>
+            {configId && (
+                <DeviceModal
+                    configId={configId}
+                    isOpen={isModalOpen}
+                    label={label}
+                    type_name={deviceType}
+                    onClose={handleCloseModal}
+                />
+            )}
         </LabelLine>
     );
 };

@@ -1,4 +1,6 @@
 import {
+    useDeleteExistingConnectionConnectionsConnectionsConnectionIdDeleteMutation,
+    useGetConfigAvaliableDevicesConfigsConfigIdAvaliableDevicesGetQuery,
     useGetConfigConnectionsConfigsConfigIdConnectionsGetQuery,
     useGetDeviceChannelsDevicesChannelsGetQuery,
     useGetDeviceModelsDevicesModelsGetQuery,
@@ -22,7 +24,18 @@ type ConfigDevicesProps = {
 };
 
 export const SettingsConfigDevices: FC<ConfigDevicesProps> = ({ configId }) => {
+    const { data: channels } = useGetDeviceChannelsDevicesChannelsGetQuery({ skip: 0, limit: 100 });
+    const { data: models } = useGetDeviceModelsDevicesModelsGetQuery({ skip: 0, limit: 100 });
     const { data: connectionsTyped } = useGetConfigConnectionsConfigsConfigIdConnectionsGetQuery({ configId });
+    const { refetch: refetchAvaliableCals } = useGetConfigAvaliableDevicesConfigsConfigIdAvaliableDevicesGetQuery({
+        configId: configId,
+        typeName: DeviceType.CAL,
+    });
+    const { refetch: refetchAvaliableUpconv } = useGetConfigAvaliableDevicesConfigsConfigIdAvaliableDevicesGetQuery({
+        configId: configId,
+        typeName: DeviceType.UPCONV,
+    });
+
     const dispatch = useAppDispatch();
     const configCals = useSelector(getAttemptCals);
     const configUpconv = useSelector(getAttemptUpconv);
@@ -34,10 +47,22 @@ export const SettingsConfigDevices: FC<ConfigDevicesProps> = ({ configId }) => {
         }
     }, [dispatch, connectionsTyped]);
 
-    const { data: channels } = useGetDeviceChannelsDevicesChannelsGetQuery({ skip: 0, limit: 100 });
-    const { data: models } = useGetDeviceModelsDevicesModelsGetQuery({ skip: 0, limit: 100 });
-
     const [updateConnection] = useUpdateExistingConnectionConnectionsConnectionsConnectionIdPutMutation();
+    const [deleteConnection] = useDeleteExistingConnectionConnectionsConnectionsConnectionIdDeleteMutation();
+
+    const handleDeleteConnection = (index: number, deviceType: DeviceType) => {
+        const updatedConnections = deviceType === DeviceType.CAL ? [...configCals] : [...configUpconv];
+        const connection = updatedConnections[index];
+
+        const filteredConnections = updatedConnections.filter((conn, i) => i !== index);
+
+        deleteConnection({ connectionId: connection.id });
+        deviceType === DeviceType.CAL ? refetchAvaliableCals() : refetchAvaliableUpconv();
+
+        const action = connectionActions[deviceType];
+        dispatch(action(filteredConnections));
+        dispatch(attemptActions.setSuccess(false));
+    };
 
     const handleChannelChange = (index: number, event: SelectChangeEvent<string | number>, deviceType: DeviceType) => {
         const updatedConnections = deviceType === DeviceType.CAL ? [...configCals] : [...configUpconv];
@@ -61,6 +86,7 @@ export const SettingsConfigDevices: FC<ConfigDevicesProps> = ({ configId }) => {
 
         const action = connectionActions[deviceType];
         dispatch(action(updatedConnections));
+        dispatch(attemptActions.setSuccess(false));
     };
 
     return (
@@ -72,6 +98,7 @@ export const SettingsConfigDevices: FC<ConfigDevicesProps> = ({ configId }) => {
                 deviceType={DeviceType.CAL}
                 models={models}
                 onChannelChange={handleChannelChange}
+                onConnectionDelete={handleDeleteConnection}
             />
             <SettingsConfigList
                 cals={[SA, ...configCals]}
@@ -80,6 +107,7 @@ export const SettingsConfigDevices: FC<ConfigDevicesProps> = ({ configId }) => {
                 deviceType={DeviceType.UPCONV}
                 models={models}
                 onChannelChange={handleChannelChange}
+                onConnectionDelete={handleDeleteConnection}
             />
         </Box>
     );

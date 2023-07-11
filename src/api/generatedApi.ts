@@ -212,6 +212,16 @@ const injectedRtkApi = api
                 query: (queryArg) => ({ url: `/configs/${queryArg.configId}/upconverters` }),
                 providesTags: ['configs'],
             }),
+            getConfigAvaliableDevicesConfigsConfigIdAvaliableDevicesGet: build.query<
+                GetConfigAvaliableDevicesConfigsConfigIdAvaliableDevicesGetApiResponse,
+                GetConfigAvaliableDevicesConfigsConfigIdAvaliableDevicesGetApiArg
+            >({
+                query: (queryArg) => ({
+                    url: `/configs/${queryArg.configId}/avaliable_devices`,
+                    params: { type_name: queryArg.typeName },
+                }),
+                providesTags: ['configs'],
+            }),
             getAttemptsAttemptsGet: build.query<GetAttemptsAttemptsGetApiResponse, GetAttemptsAttemptsGetApiArg>({
                 query: (queryArg) => ({ url: `/attempts/`, params: { skip: queryArg.skip, limit: queryArg.limit } }),
                 providesTags: ['attempts'],
@@ -381,6 +391,12 @@ export type GetConfigUpconvConfigsConfigIdUpconvertersGetApiResponse =
 export type GetConfigUpconvConfigsConfigIdUpconvertersGetApiArg = {
     configId: number;
 };
+export type GetConfigAvaliableDevicesConfigsConfigIdAvaliableDevicesGetApiResponse =
+    /** status 200 Successful Response */ DeviceRelated[];
+export type GetConfigAvaliableDevicesConfigsConfigIdAvaliableDevicesGetApiArg = {
+    configId: number;
+    typeName: string;
+};
 export type GetAttemptsAttemptsGetApiResponse = /** status 200 Successful Response */ Attempt[];
 export type GetAttemptsAttemptsGetApiArg = {
     skip?: number;
@@ -468,7 +484,7 @@ export type DeviceRelatedCreate = {
 export type Connection = {
     device_id: number;
     connected_to_device_id?: number;
-    connected_to_device_channel_id: number;
+    connected_to_device_channel_id?: number;
     id: number;
     configuration_id: number;
 };
@@ -498,8 +514,6 @@ export type ConnectionsTyped = {
 };
 export type ConnectionCreate = {
     device_id: number;
-    connected_to_device_id?: number;
-    connected_to_device_channel_id?: number;
 };
 export type Attempt = {
     configuration_id: number;
@@ -557,6 +571,7 @@ export const {
     useCreateNewConnectionConfigsConfigIdConnectionsPostMutation,
     useGetConfigCalsConfigsConfigIdCalsGetQuery,
     useGetConfigUpconvConfigsConfigIdUpconvertersGetQuery,
+    useGetConfigAvaliableDevicesConfigsConfigIdAvaliableDevicesGetQuery,
     useGetAttemptsAttemptsGetQuery,
     useCreateNewAttemptAttemptsPostMutation,
     useGetLastAttemptAttemptsLastGetQuery,
