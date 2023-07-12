@@ -8,7 +8,7 @@ import {
     useUpdateExistingConnectionConnectedToConnectionsConnectionIdConnectedToPutMutation,
     useUpdateExistingDeviceDevicesDeviceIdModelPutMutation,
 } from '@api/generatedApi';
-import { SettingsConfigList } from '@components/Settings/SettingsConfigList/SettingsConfigList';
+import { ConfigConnectionsTyped } from '@components/Settings/ConfigConnectionsTyped/ConfigConnectionsTyped';
 import { ConfirmModal } from '@components/UI/ConfirmModal/ConfirmModal';
 import { useAppDispatch } from '@hooks/useAppDispatch';
 import type { SelectChangeEvent } from '@mui/material';
@@ -20,16 +20,17 @@ import { connectionActions, DeviceType } from '@store/entities/attempt/types/Dev
 import { type FC, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 
-import styles from './SettingsConfigDevices.module.css';
+import styles from './ConfigConnections.module.css';
 
-type ConfigDevicesProps = {
+type ConfigConnectionsProps = {
     configId: number;
 };
 
-export const SettingsConfigDevices: FC<ConfigDevicesProps> = ({ configId }) => {
+export const ConfigConnections: FC<ConfigConnectionsProps> = ({ configId }) => {
     const { data: channels } = useGetDeviceChannelsDevicesChannelsGetQuery({ skip: 0, limit: 100 });
     const { data: models } = useGetDeviceModelsDevicesModelsGetQuery({ skip: 0, limit: 100 });
-    const { data: connectionsTyped } = useGetConfigConnectionsConfigsConfigIdConnectionsGetQuery({ configId });
+    const { data: connectionsTyped, refetch: refetchConnections } =
+        useGetConfigConnectionsConfigsConfigIdConnectionsGetQuery({ configId });
     const { refetch: refetchAvaliableCals } = useGetConfigAvaliableDevicesConfigsConfigIdAvaliableDevicesGetQuery({
         configId: configId,
         typeName: DeviceType.CAL,
@@ -76,14 +77,14 @@ export const SettingsConfigDevices: FC<ConfigDevicesProps> = ({ configId }) => {
         const connection = updatedConnections[deletingConnectionIndex];
 
         deleteConnection({ connectionId: connection.id });
+        refetchConnections();
         deletingConnectionType === DeviceType.CAL ? refetchAvaliableCals() : refetchAvaliableUpconv();
 
         const filteredConnections = updatedConnections.filter((conn, i) => i !== deletingConnectionIndex);
-
         const action = connectionActions[deletingConnectionType];
+
         dispatch(action(filteredConnections));
         dispatch(attemptActions.setSuccess(false));
-
         setDeleteConfirmationOpen(false);
     };
 
@@ -156,7 +157,7 @@ export const SettingsConfigDevices: FC<ConfigDevicesProps> = ({ configId }) => {
 
     return (
         <Box className={styles.flexBox}>
-            <SettingsConfigList
+            <ConfigConnectionsTyped
                 cals={[SA, ...configCals]}
                 channels={channels}
                 connections={configCals}
@@ -167,7 +168,7 @@ export const SettingsConfigDevices: FC<ConfigDevicesProps> = ({ configId }) => {
                 onConnectionDelete={handleDeleteConnection}
                 onModelChange={handleModelChange}
             />
-            <SettingsConfigList
+            <ConfigConnectionsTyped
                 cals={configCals}
                 channels={channels}
                 connections={configUpconv}

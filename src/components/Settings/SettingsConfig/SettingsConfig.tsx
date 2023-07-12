@@ -1,6 +1,6 @@
 import { useGetConfigsConfigsGetQuery } from '@api/generatedApi';
+import { ConfigConnections } from '@components/Settings/ConfigConnections/ConfigConnections';
 import { NewConfigButton } from '@components/Settings/NewConfigButton/NewConfigButton';
-import { SettingsConfigDevices } from '@components/Settings/SettingsConfigDevices/SettingsConfigDevices';
 import { LabelLine } from '@components/UI/LabelLine';
 import { Box } from '@mui/material';
 import { getAttempt } from '@store/entities/attempt';
@@ -23,7 +23,7 @@ export const SettingsConfig = () => {
                 {configs && configs.length > 0 ? <ConfigList configs={configs} /> : null}
                 <NewConfigButton />
             </LabelLine>
-            {attempt?.configuration.id && <SettingsConfigDevices configId={attempt.configuration.id} />}
+            {attempt?.configuration.id && <ConfigConnections configId={attempt.configuration.id} />}
         </Box>
     );
 };

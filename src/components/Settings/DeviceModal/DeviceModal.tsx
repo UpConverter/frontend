@@ -65,6 +65,11 @@ export const DeviceModal: FC<DeviceModalProps> = ({ configId, label, type_name, 
                             columns={columns}
                             pageSizeOptions={[5, 10]}
                             rows={devices}
+                            initialState={{
+                                pagination: {
+                                    paginationModel: { page: 0, pageSize: 5 },
+                                },
+                            }}
                             onRowClick={handleRowClick}
                         />
                     ) : (
