@@ -22,6 +22,8 @@ type ConfigListProps = {
     channels: DeviceChannel[] | undefined;
     models: DeviceModel[] | undefined;
     onConnectionDelete: (index: number, deviceType: DeviceType) => void;
+    onModelChange: (index: number, event: SelectChangeEvent<string | number>, deviceType: DeviceType) => void;
+    onConnectedToChange: (index: number, event: SelectChangeEvent<string | number>, deviceType: DeviceType) => void;
     onChannelChange: (index: number, event: SelectChangeEvent<string | number>, deviceType: DeviceType) => void;
 };
 export const SettingsConfigList: FC<ConfigListProps> = ({
@@ -32,6 +34,8 @@ export const SettingsConfigList: FC<ConfigListProps> = ({
     models,
     onConnectionDelete,
     onChannelChange,
+    onConnectedToChange,
+    onModelChange,
 }) => {
     const configId = useSelector(getAttemptConfigId);
     const label = deviceType === DeviceType.CAL ? CALS_LABEL : UPCONV_LABEL;
@@ -63,12 +67,14 @@ export const SettingsConfigList: FC<ConfigListProps> = ({
                             data={models?.map((model) => ({ id: model.id, value: model.name }))}
                             size='small'
                             value={connection.model_name}
+                            onChange={(value) => onModelChange(index, value, deviceType)}
                         />
                         <CustomSelect
                             className={styles.rowCals}
                             data={cals?.map((cal) => ({ id: cal.id, value: cal.device }))}
                             size='small'
                             value={connection.connected_to_device}
+                            onChange={(value) => onConnectedToChange(index, value, deviceType)}
                         />
                         <CustomSelect
                             className={styles.rowChannels}

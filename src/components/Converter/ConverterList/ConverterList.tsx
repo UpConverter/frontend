@@ -44,6 +44,7 @@ export const ConverterList = () => {
                     connected_to_device={upconv.connected_to_device}
                     connected_to_device_channel={upconv.connected_to_device_channel}
                     device={upconv.device}
+                    device_id={upconv.device_id}
                     id={upconv.id}
                     key={idx}
                     state_name={upconv.state_name}

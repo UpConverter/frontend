@@ -1,10 +1,12 @@
 import {
-    useDeleteExistingConnectionConnectionsConnectionsConnectionIdDeleteMutation,
+    useDeleteExistingConnectionConnectionsConnectionIdDeleteMutation,
     useGetConfigAvaliableDevicesConfigsConfigIdAvaliableDevicesGetQuery,
     useGetConfigConnectionsConfigsConfigIdConnectionsGetQuery,
     useGetDeviceChannelsDevicesChannelsGetQuery,
     useGetDeviceModelsDevicesModelsGetQuery,
-    useUpdateExistingConnectionConnectionsConnectionsConnectionIdPutMutation,
+    useUpdateExistingConnectionChannelConnectionsConnectionIdChannelPutMutation,
+    useUpdateExistingConnectionConnectedToConnectionsConnectionIdConnectedToPutMutation,
+    useUpdateExistingDeviceDevicesDeviceIdModelPutMutation,
 } from '@api/generatedApi';
 import { SettingsConfigList } from '@components/Settings/SettingsConfigList/SettingsConfigList';
 import { ConfirmModal } from '@components/UI/ConfirmModal/ConfirmModal';
@@ -42,6 +44,7 @@ export const SettingsConfigDevices: FC<ConfigDevicesProps> = ({ configId }) => {
     const configUpconv = useSelector(getAttemptUpconv);
     const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
     const [deletingConnectionIndex, setDeletingConnectionIndex] = useState(-1);
+    const [deletingContent, setDeletingContent] = useState('');
     const [deletingConnectionType, setDeletingConnectionType] = useState<DeviceType>(DeviceType.CAL);
 
     useEffect(() => {
@@ -51,12 +54,16 @@ export const SettingsConfigDevices: FC<ConfigDevicesProps> = ({ configId }) => {
         }
     }, [dispatch, connectionsTyped]);
 
-    const [updateConnection] = useUpdateExistingConnectionConnectionsConnectionsConnectionIdPutMutation();
-    const [deleteConnection] = useDeleteExistingConnectionConnectionsConnectionsConnectionIdDeleteMutation();
+    const [updateChannel] = useUpdateExistingConnectionChannelConnectionsConnectionIdChannelPutMutation();
+    const [updateConnectedTo] = useUpdateExistingConnectionConnectedToConnectionsConnectionIdConnectedToPutMutation();
+    const [updateDeviceModel] = useUpdateExistingDeviceDevicesDeviceIdModelPutMutation();
+    const [deleteConnection] = useDeleteExistingConnectionConnectionsConnectionIdDeleteMutation();
 
     const handleDeleteConnection = (index: number, deviceType: DeviceType) => {
         setDeletingConnectionIndex(index);
         setDeletingConnectionType(deviceType);
+        const content = deviceType === DeviceType.CAL ? configCals[index].device : configUpconv[index].device;
+        setDeletingContent(content);
         setDeleteConfirmationOpen(true);
     };
 
@@ -90,13 +97,55 @@ export const SettingsConfigDevices: FC<ConfigDevicesProps> = ({ configId }) => {
             connected_to_device_channel: newChannelName,
         };
 
-        updateConnection({
+        updateChannel({
             connectionId: connection.id,
-            connectionRelatedCreate: {
-                device: connection.device,
-                connected_to_device: connection.connected_to_device,
-                connected_to_device_channel: newChannelName,
-            },
+            channel: newChannelName,
+        });
+        updatedConnections[index] = updatedConnection;
+
+        const action = connectionActions[deviceType];
+        dispatch(action(updatedConnections));
+        dispatch(attemptActions.setSuccess(false));
+    };
+
+    const handleConnectedToChange = (
+        index: number,
+        event: SelectChangeEvent<string | number>,
+        deviceType: DeviceType
+    ) => {
+        const updatedConnections = deviceType === DeviceType.CAL ? [...configCals] : [...configUpconv];
+        const connection = updatedConnections[index];
+        const newConnectedToName = event.target.value as string;
+
+        const updatedConnection = {
+            ...connection,
+            connected_to_device: newConnectedToName,
+        };
+
+        updateConnectedTo({
+            connectionId: connection.id,
+            connectedTo: newConnectedToName,
+        });
+        updatedConnections[index] = updatedConnection;
+
+        const action = connectionActions[deviceType];
+        dispatch(action(updatedConnections));
+        dispatch(attemptActions.setSuccess(false));
+    };
+
+    const handleModelChange = (index: number, event: SelectChangeEvent<string | number>, deviceType: DeviceType) => {
+        const updatedConnections = deviceType === DeviceType.CAL ? [...configCals] : [...configUpconv];
+        const connection = updatedConnections[index];
+        const newModel = event.target.value as string;
+
+        const updatedConnection = {
+            ...connection,
+            model_name: newModel,
+        };
+
+        updateDeviceModel({
+            deviceId: connection.device_id,
+            model: newModel,
         });
         updatedConnections[index] = updatedConnection;
 
@@ -114,7 +163,9 @@ export const SettingsConfigDevices: FC<ConfigDevicesProps> = ({ configId }) => {
                 deviceType={DeviceType.CAL}
                 models={models}
                 onChannelChange={handleChannelChange}
+                onConnectedToChange={handleConnectedToChange}
                 onConnectionDelete={handleDeleteConnection}
+                onModelChange={handleModelChange}
             />
             <SettingsConfigList
                 cals={[SA, ...configCals]}
@@ -123,10 +174,12 @@ export const SettingsConfigDevices: FC<ConfigDevicesProps> = ({ configId }) => {
                 deviceType={DeviceType.UPCONV}
                 models={models}
                 onChannelChange={handleChannelChange}
+                onConnectedToChange={handleConnectedToChange}
                 onConnectionDelete={handleDeleteConnection}
+                onModelChange={handleModelChange}
             />
             <ConfirmModal
-                content={'Вы уверены, что хотите удалить соединение?'}
+                content={`Вы уверены, что хотите удалить соединение ${deletingContent}?`}
                 isOpen={deleteConfirmationOpen}
                 title={'Подтверждение удаления'}
                 onClose={handleDeleteConfirmationCancel}

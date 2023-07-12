@@ -36,6 +36,7 @@ export const SettingsConfig = () => {
     const [newName, setNewName] = useState('');
 
     const handleConfigChange = (event: SelectChangeEvent<string | number>) => {
+        console.log(event);
         const newConfigName = event.target.value as string;
         const newConfiguration = configs?.find((config) => config.name === newConfigName);
         dispatch(attemptActions.setConfiguration(newConfiguration));

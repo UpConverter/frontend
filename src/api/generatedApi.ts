@@ -126,22 +126,55 @@ const injectedRtkApi = api
                 query: (queryArg) => ({ url: `/devices/`, method: 'POST', body: queryArg.deviceRelatedCreate }),
                 invalidatesTags: ['devices'],
             }),
-            updateExistingConnectionConnectionsConnectionsConnectionIdPut: build.mutation<
-                UpdateExistingConnectionConnectionsConnectionsConnectionIdPutApiResponse,
-                UpdateExistingConnectionConnectionsConnectionsConnectionIdPutApiArg
+            updateExistingDeviceDevicesDeviceIdModelPut: build.mutation<
+                UpdateExistingDeviceDevicesDeviceIdModelPutApiResponse,
+                UpdateExistingDeviceDevicesDeviceIdModelPutApiArg
             >({
                 query: (queryArg) => ({
-                    url: `/connections/connections/${queryArg.connectionId}`,
+                    url: `/devices/${queryArg.deviceId}/model`,
+                    method: 'PUT',
+                    params: { model: queryArg.model },
+                }),
+                invalidatesTags: ['devices'],
+            }),
+            updateExistingConnectionConnectionsConnectionIdPut: build.mutation<
+                UpdateExistingConnectionConnectionsConnectionIdPutApiResponse,
+                UpdateExistingConnectionConnectionsConnectionIdPutApiArg
+            >({
+                query: (queryArg) => ({
+                    url: `/connections/${queryArg.connectionId}`,
                     method: 'PUT',
                     body: queryArg.connectionRelatedCreate,
                 }),
                 invalidatesTags: ['connections'],
             }),
-            deleteExistingConnectionConnectionsConnectionsConnectionIdDelete: build.mutation<
-                DeleteExistingConnectionConnectionsConnectionsConnectionIdDeleteApiResponse,
-                DeleteExistingConnectionConnectionsConnectionsConnectionIdDeleteApiArg
+            deleteExistingConnectionConnectionsConnectionIdDelete: build.mutation<
+                DeleteExistingConnectionConnectionsConnectionIdDeleteApiResponse,
+                DeleteExistingConnectionConnectionsConnectionIdDeleteApiArg
             >({
-                query: (queryArg) => ({ url: `/connections/connections/${queryArg.connectionId}`, method: 'DELETE' }),
+                query: (queryArg) => ({ url: `/connections/${queryArg.connectionId}`, method: 'DELETE' }),
+                invalidatesTags: ['connections'],
+            }),
+            updateExistingConnectionChannelConnectionsConnectionIdChannelPut: build.mutation<
+                UpdateExistingConnectionChannelConnectionsConnectionIdChannelPutApiResponse,
+                UpdateExistingConnectionChannelConnectionsConnectionIdChannelPutApiArg
+            >({
+                query: (queryArg) => ({
+                    url: `/connections/${queryArg.connectionId}/channel`,
+                    method: 'PUT',
+                    params: { channel: queryArg.channel },
+                }),
+                invalidatesTags: ['connections'],
+            }),
+            updateExistingConnectionConnectedToConnectionsConnectionIdConnectedToPut: build.mutation<
+                UpdateExistingConnectionConnectedToConnectionsConnectionIdConnectedToPutApiResponse,
+                UpdateExistingConnectionConnectedToConnectionsConnectionIdConnectedToPutApiArg
+            >({
+                query: (queryArg) => ({
+                    url: `/connections/${queryArg.connectionId}/connected_to`,
+                    method: 'PUT',
+                    params: { connected_to: queryArg.connectedTo },
+                }),
                 invalidatesTags: ['connections'],
             }),
             getConfigsConfigsGet: build.query<GetConfigsConfigsGetApiResponse, GetConfigsConfigsGetApiArg>({
@@ -359,16 +392,33 @@ export type CreateNewDeviceDevicesPostApiResponse = /** status 200 Successful Re
 export type CreateNewDeviceDevicesPostApiArg = {
     deviceRelatedCreate: DeviceRelatedCreate;
 };
-export type UpdateExistingConnectionConnectionsConnectionsConnectionIdPutApiResponse =
+export type UpdateExistingDeviceDevicesDeviceIdModelPutApiResponse = /** status 200 Successful Response */ Device;
+export type UpdateExistingDeviceDevicesDeviceIdModelPutApiArg = {
+    deviceId: number;
+    model: string;
+};
+export type UpdateExistingConnectionConnectionsConnectionIdPutApiResponse =
     /** status 200 Successful Response */ Connection;
-export type UpdateExistingConnectionConnectionsConnectionsConnectionIdPutApiArg = {
+export type UpdateExistingConnectionConnectionsConnectionIdPutApiArg = {
     connectionId: number;
     connectionRelatedCreate: ConnectionRelatedCreate;
 };
-export type DeleteExistingConnectionConnectionsConnectionsConnectionIdDeleteApiResponse =
+export type DeleteExistingConnectionConnectionsConnectionIdDeleteApiResponse =
     /** status 200 Successful Response */ any;
-export type DeleteExistingConnectionConnectionsConnectionsConnectionIdDeleteApiArg = {
+export type DeleteExistingConnectionConnectionsConnectionIdDeleteApiArg = {
     connectionId: number;
+};
+export type UpdateExistingConnectionChannelConnectionsConnectionIdChannelPutApiResponse =
+    /** status 200 Successful Response */ Connection;
+export type UpdateExistingConnectionChannelConnectionsConnectionIdChannelPutApiArg = {
+    connectionId: number;
+    channel: string;
+};
+export type UpdateExistingConnectionConnectedToConnectionsConnectionIdConnectedToPutApiResponse =
+    /** status 200 Successful Response */ Connection;
+export type UpdateExistingConnectionConnectedToConnectionsConnectionIdConnectedToPutApiArg = {
+    connectionId: number;
+    connectedTo: string;
 };
 export type GetConfigsConfigsGetApiResponse = /** status 200 Successful Response */ Configuration[];
 export type GetConfigsConfigsGetApiArg = void;
@@ -509,13 +559,16 @@ export type DeviceRelatedCreate = {
 };
 export type Connection = {
     device_id: number;
+    model_id?: string;
     connected_to_device_id?: number;
     connected_to_device_channel_id?: number;
     id: number;
     configuration_id: number;
 };
 export type ConnectionRelatedCreate = {
+    device_id: number;
     device: string;
+    model_name?: string;
     connected_to_device?: string;
     connected_to_device_channel?: string;
 };
@@ -527,11 +580,12 @@ export type ConfigurationCreate = {
     name: string;
 };
 export type Connections = {
+    device_id: number;
     device: string;
+    model_name?: string;
     connected_to_device?: string;
     connected_to_device_channel?: string;
     id: number;
-    model_name?: string;
     state_name?: string;
 };
 export type ConnectionsTyped = {
@@ -586,8 +640,11 @@ export const {
     useUpdateExistingDeviceDevicesDeviceIdPutMutation,
     useDeleteExistingDeviceDevicesDeviceIdDeleteMutation,
     useCreateNewDeviceDevicesPostMutation,
-    useUpdateExistingConnectionConnectionsConnectionsConnectionIdPutMutation,
-    useDeleteExistingConnectionConnectionsConnectionsConnectionIdDeleteMutation,
+    useUpdateExistingDeviceDevicesDeviceIdModelPutMutation,
+    useUpdateExistingConnectionConnectionsConnectionIdPutMutation,
+    useDeleteExistingConnectionConnectionsConnectionIdDeleteMutation,
+    useUpdateExistingConnectionChannelConnectionsConnectionIdChannelPutMutation,
+    useUpdateExistingConnectionConnectedToConnectionsConnectionIdConnectedToPutMutation,
     useGetConfigsConfigsGetQuery,
     useCreateNewConfigConfigsPostMutation,
     useCreateNewConfigConfigsNewPostMutation,

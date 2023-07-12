@@ -1,5 +1,6 @@
 export const SA = {
-    id: 1,
+    id: 0,
+    device_id: 1,
     device: 'SA',
     connected_to_device: undefined,
     connected_to_device_channel: undefined,
