@@ -63,21 +63,21 @@ export const SettingsConfigList: FC<ConfigListProps> = ({
                         size='medium'
                     >
                         <CustomSelect
-                            className={styles.rowTypes}
+                            className={styles.columnModels}
                             data={models?.map((model) => ({ id: model.id, value: model.name }))}
                             size='small'
                             value={connection.model_name}
                             onChange={(value) => onModelChange(index, value, deviceType)}
                         />
                         <CustomSelect
-                            className={styles.rowCals}
+                            className={styles.columnCals}
                             data={cals?.map((cal) => ({ id: cal.id, value: cal.device }))}
                             size='small'
                             value={connection.connected_to_device}
                             onChange={(value) => onConnectedToChange(index, value, deviceType)}
                         />
                         <CustomSelect
-                            className={styles.rowChannels}
+                            className={styles.columnChannels}
                             data={channels?.map((channel) => ({ id: channel.id, value: channel.name }))}
                             size='small'
                             value={connection.connected_to_device_channel}

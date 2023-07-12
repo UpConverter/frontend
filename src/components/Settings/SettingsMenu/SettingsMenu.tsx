@@ -25,10 +25,20 @@ export const SettingsMenu: FC = () => {
 
         return storedType ? JSON.parse(storedType) : MenuItems.CUMMON;
     });
+    const [message, setMessage] = useState('');
     const [showSnackbar, setShowSnackbar] = useState(false);
 
     const handleApplyClick = () => {
-        if (!configuration_id || !speed || !port) {
+        if (!speed || !port) {
+            setMessage('Пожалуйста, укажите порт и скорость соединения');
+            setShowSnackbar(true);
+
+            return;
+        }
+        if (!configuration_id) {
+            setMessage('Конфигурация не была выбрана');
+            setShowSnackbar(true);
+
             return;
         }
 
@@ -40,8 +50,15 @@ export const SettingsMenu: FC = () => {
             },
         })
             .unwrap()
-            .then(() => {
+            .then((response) => {
+                const { success } = response;
+                setMessage(success ? SUCCESS_CREATE_ATTEMPT : ERROR_CREATE_ATTEMPT);
                 setShowSnackbar(true);
+            })
+            .catch((error) => {
+                setMessage(ERROR_CREATE_ATTEMPT);
+                setShowSnackbar(true);
+                console.error(error);
             });
     };
 
@@ -102,7 +119,7 @@ export const SettingsMenu: FC = () => {
                     severity={success ? 'success' : 'error'}
                     onClose={handleSnackbarClose}
                 >
-                    {success ? SUCCESS_CREATE_ATTEMPT : ERROR_CREATE_ATTEMPT}
+                    {message}
                 </Alert>
             </Snackbar>
         </Box>

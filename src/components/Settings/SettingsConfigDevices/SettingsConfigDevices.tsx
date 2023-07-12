@@ -168,7 +168,7 @@ export const SettingsConfigDevices: FC<ConfigDevicesProps> = ({ configId }) => {
                 onModelChange={handleModelChange}
             />
             <SettingsConfigList
-                cals={[SA, ...configCals]}
+                cals={configCals}
                 channels={channels}
                 connections={configUpconv}
                 deviceType={DeviceType.UPCONV}
