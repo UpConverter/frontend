@@ -155,6 +155,13 @@ const injectedRtkApi = api
                 query: (queryArg) => ({ url: `/configs/`, method: 'POST', body: queryArg.configurationCreate }),
                 invalidatesTags: ['configs'],
             }),
+            createNewConfigConfigsNewPost: build.mutation<
+                CreateNewConfigConfigsNewPostApiResponse,
+                CreateNewConfigConfigsNewPostApiArg
+            >({
+                query: () => ({ url: `/configs/new`, method: 'POST' }),
+                invalidatesTags: ['configs'],
+            }),
             getConfigConfigsConfigIdGet: build.query<
                 GetConfigConfigsConfigIdGetApiResponse,
                 GetConfigConfigsConfigIdGetApiArg
@@ -169,7 +176,7 @@ const injectedRtkApi = api
                 query: (queryArg) => ({
                     url: `/configs/${queryArg.configId}`,
                     method: 'PUT',
-                    body: queryArg.connectionsTyped,
+                    body: queryArg.configurationCreate,
                 }),
                 invalidatesTags: ['configs'],
             }),
@@ -186,6 +193,17 @@ const injectedRtkApi = api
             >({
                 query: (queryArg) => ({ url: `/configs/${queryArg.configId}/connections` }),
                 providesTags: ['configs'],
+            }),
+            updateExistingConfigConnectionsConfigsConfigIdConnectionsPut: build.mutation<
+                UpdateExistingConfigConnectionsConfigsConfigIdConnectionsPutApiResponse,
+                UpdateExistingConfigConnectionsConfigsConfigIdConnectionsPutApiArg
+            >({
+                query: (queryArg) => ({
+                    url: `/configs/${queryArg.configId}/connections`,
+                    method: 'PUT',
+                    body: queryArg.connectionsTyped,
+                }),
+                invalidatesTags: ['configs'],
             }),
             createNewConnectionConfigsConfigIdConnectionsPost: build.mutation<
                 CreateNewConnectionConfigsConfigIdConnectionsPostApiResponse,
@@ -358,6 +376,8 @@ export type CreateNewConfigConfigsPostApiResponse = /** status 200 Successful Re
 export type CreateNewConfigConfigsPostApiArg = {
     configurationCreate: ConfigurationCreate;
 };
+export type CreateNewConfigConfigsNewPostApiResponse = /** status 200 Successful Response */ Configuration;
+export type CreateNewConfigConfigsNewPostApiArg = void;
 export type GetConfigConfigsConfigIdGetApiResponse = /** status 200 Successful Response */ Configuration;
 export type GetConfigConfigsConfigIdGetApiArg = {
     configId: number;
@@ -365,7 +385,7 @@ export type GetConfigConfigsConfigIdGetApiArg = {
 export type UpdateExistingConfigConfigsConfigIdPutApiResponse = /** status 200 Successful Response */ any;
 export type UpdateExistingConfigConfigsConfigIdPutApiArg = {
     configId: number;
-    connectionsTyped: ConnectionsTyped;
+    configurationCreate: ConfigurationCreate;
 };
 export type DeleteExistingConfigConfigsConfigIdDeleteApiResponse = /** status 200 Successful Response */ any;
 export type DeleteExistingConfigConfigsConfigIdDeleteApiArg = {
@@ -375,6 +395,12 @@ export type GetConfigConnectionsConfigsConfigIdConnectionsGetApiResponse =
     /** status 200 Successful Response */ ConnectionsTyped;
 export type GetConfigConnectionsConfigsConfigIdConnectionsGetApiArg = {
     configId: number;
+};
+export type UpdateExistingConfigConnectionsConfigsConfigIdConnectionsPutApiResponse =
+    /** status 200 Successful Response */ any;
+export type UpdateExistingConfigConnectionsConfigsConfigIdConnectionsPutApiArg = {
+    configId: number;
+    connectionsTyped: ConnectionsTyped;
 };
 export type CreateNewConnectionConfigsConfigIdConnectionsPostApiResponse =
     /** status 200 Successful Response */ Connection;
@@ -564,10 +590,12 @@ export const {
     useDeleteExistingConnectionConnectionsConnectionsConnectionIdDeleteMutation,
     useGetConfigsConfigsGetQuery,
     useCreateNewConfigConfigsPostMutation,
+    useCreateNewConfigConfigsNewPostMutation,
     useGetConfigConfigsConfigIdGetQuery,
     useUpdateExistingConfigConfigsConfigIdPutMutation,
     useDeleteExistingConfigConfigsConfigIdDeleteMutation,
     useGetConfigConnectionsConfigsConfigIdConnectionsGetQuery,
+    useUpdateExistingConfigConnectionsConfigsConfigIdConnectionsPutMutation,
     useCreateNewConnectionConfigsConfigIdConnectionsPostMutation,
     useGetConfigCalsConfigsConfigIdCalsGetQuery,
     useGetConfigUpconvConfigsConfigIdUpconvertersGetQuery,

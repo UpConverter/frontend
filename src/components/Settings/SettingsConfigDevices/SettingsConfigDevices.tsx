@@ -7,6 +7,7 @@ import {
     useUpdateExistingConnectionConnectionsConnectionsConnectionIdPutMutation,
 } from '@api/generatedApi';
 import { SettingsConfigList } from '@components/Settings/SettingsConfigList/SettingsConfigList';
+import { ConfirmModal } from '@components/UI/ConfirmModal/ConfirmModal';
 import { useAppDispatch } from '@hooks/useAppDispatch';
 import type { SelectChangeEvent } from '@mui/material';
 import { Box } from '@mui/material';
@@ -14,7 +15,7 @@ import { attemptActions } from '@store/entities/attempt';
 import { getAttemptCals, getAttemptUpconv } from '@store/entities/attempt';
 import { SA } from '@store/entities/attempt/constants/saDevice';
 import { connectionActions, DeviceType } from '@store/entities/attempt/types/DeviceSchema';
-import { type FC, useEffect } from 'react';
+import { type FC, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 import styles from './SettingsConfigDevices.module.css';
@@ -39,6 +40,9 @@ export const SettingsConfigDevices: FC<ConfigDevicesProps> = ({ configId }) => {
     const dispatch = useAppDispatch();
     const configCals = useSelector(getAttemptCals);
     const configUpconv = useSelector(getAttemptUpconv);
+    const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
+    const [deletingConnectionIndex, setDeletingConnectionIndex] = useState(-1);
+    const [deletingConnectionType, setDeletingConnectionType] = useState<DeviceType>(DeviceType.CAL);
 
     useEffect(() => {
         if (connectionsTyped) {
@@ -51,17 +55,29 @@ export const SettingsConfigDevices: FC<ConfigDevicesProps> = ({ configId }) => {
     const [deleteConnection] = useDeleteExistingConnectionConnectionsConnectionsConnectionIdDeleteMutation();
 
     const handleDeleteConnection = (index: number, deviceType: DeviceType) => {
-        const updatedConnections = deviceType === DeviceType.CAL ? [...configCals] : [...configUpconv];
-        const connection = updatedConnections[index];
+        setDeletingConnectionIndex(index);
+        setDeletingConnectionType(deviceType);
+        setDeleteConfirmationOpen(true);
+    };
 
-        const filteredConnections = updatedConnections.filter((conn, i) => i !== index);
+    const handleDeleteConfirmationCancel = () => {
+        setDeleteConfirmationOpen(false);
+    };
+
+    const handleDeleteConfirmation = () => {
+        const updatedConnections = deletingConnectionType === DeviceType.CAL ? [...configCals] : [...configUpconv];
+        const connection = updatedConnections[deletingConnectionIndex];
 
         deleteConnection({ connectionId: connection.id });
-        deviceType === DeviceType.CAL ? refetchAvaliableCals() : refetchAvaliableUpconv();
+        deletingConnectionType === DeviceType.CAL ? refetchAvaliableCals() : refetchAvaliableUpconv();
 
-        const action = connectionActions[deviceType];
+        const filteredConnections = updatedConnections.filter((conn, i) => i !== deletingConnectionIndex);
+
+        const action = connectionActions[deletingConnectionType];
         dispatch(action(filteredConnections));
         dispatch(attemptActions.setSuccess(false));
+
+        setDeleteConfirmationOpen(false);
     };
 
     const handleChannelChange = (index: number, event: SelectChangeEvent<string | number>, deviceType: DeviceType) => {
@@ -108,6 +124,13 @@ export const SettingsConfigDevices: FC<ConfigDevicesProps> = ({ configId }) => {
                 models={models}
                 onChannelChange={handleChannelChange}
                 onConnectionDelete={handleDeleteConnection}
+            />
+            <ConfirmModal
+                content={'Вы уверены, что хотите удалить соединение?'}
+                isOpen={deleteConfirmationOpen}
+                title={'Подтверждение удаления'}
+                onClose={handleDeleteConfirmationCancel}
+                onConfirm={handleDeleteConfirmation}
             />
         </Box>
     );

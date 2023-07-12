@@ -1,7 +1,12 @@
-.selectConfig {
+.selectConfig,
+.input {
     min-width: 20vw;
 }
 
 .mb {
     margin-bottom: 30px;
+}
+
+.iconButton {
+    min-width: 25px;
 }
