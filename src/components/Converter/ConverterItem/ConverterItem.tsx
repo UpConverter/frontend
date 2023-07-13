@@ -1,6 +1,6 @@
 import type { Connections } from '@api/generatedApi';
 import { Box, FormControlLabel, Radio, RadioGroup } from '@mui/material';
-import type { ConverterMode } from '@services/Converters/types';
+import { ConverterMode } from '@services/Converters/types';
 import type { FC } from 'react';
 import { useState } from 'react';
 
@@ -33,39 +33,20 @@ export const ConverterItem: FC<ConverterItemProps> = ({
                     value={currentMode}
                     onChange={handleModeChange}
                 >
-                    <FormControlLabel
-                        className={styles.radioLabel}
-                        label='cryo'
-                        value='cryo'
-                        control={
-                            <Radio
-                                className={styles.radioInput}
-                                color='primary'
-                            />
-                        }
-                    />
-                    <FormControlLabel
-                        className={styles.radioLabel}
-                        label='cal'
-                        value='cal'
-                        control={
-                            <Radio
-                                className={styles.radioInput}
-                                color='primary'
-                            />
-                        }
-                    />
-                    <FormControlLabel
-                        className={styles.radioLabel}
-                        label='off'
-                        value='off'
-                        control={
-                            <Radio
-                                className={styles.radioInput}
-                                color='primary'
-                            />
-                        }
-                    />
+                    {Object.entries(ConverterMode).map(([key, value]) => (
+                        <FormControlLabel
+                            className={styles.radioLabel}
+                            key={value}
+                            label={value}
+                            value={key}
+                            control={
+                                <Radio
+                                    className={styles.radioInput}
+                                    color='primary'
+                                />
+                            }
+                        />
+                    ))}
                 </RadioGroup>
             </Box>
         </Box>

@@ -19,9 +19,6 @@ export const Menu: FC = () => {
 
     return (
         <Box className={styles.rowContainer}>
-            <IconButton onClick={onSettingsClick}>
-                <Settings className={styles.settingsIcon} />
-            </IconButton>
             <IconButton
                 className={styles.logo}
                 onClick={onMainClick}
@@ -31,6 +28,9 @@ export const Menu: FC = () => {
                     className={styles.logoImage}
                     src={Logo}
                 />
+            </IconButton>
+            <IconButton onClick={onSettingsClick}>
+                <Settings className={styles.settingsIcon} />
             </IconButton>
         </Box>
     );

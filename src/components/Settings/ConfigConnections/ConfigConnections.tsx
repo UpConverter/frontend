@@ -13,6 +13,7 @@ import { ConfirmModal } from '@components/UI/ConfirmModal/ConfirmModal';
 import { useAppDispatch } from '@hooks/useAppDispatch';
 import type { SelectChangeEvent } from '@mui/material';
 import { Box } from '@mui/material';
+import CircularProgress from '@mui/material/CircularProgress';
 import { attemptActions } from '@store/entities/attempt';
 import { getAttemptCals, getAttemptUpconv } from '@store/entities/attempt';
 import { SA } from '@store/entities/attempt/constants/saDevice';
@@ -29,8 +30,11 @@ type ConfigConnectionsProps = {
 export const ConfigConnections: FC<ConfigConnectionsProps> = ({ configId }) => {
     const { data: channels } = useGetDeviceChannelsDevicesChannelsGetQuery({ skip: 0, limit: 100 });
     const { data: models } = useGetDeviceModelsDevicesModelsGetQuery({ skip: 0, limit: 100 });
-    const { data: connectionsTyped, refetch: refetchConnections } =
-        useGetConfigConnectionsConfigsConfigIdConnectionsGetQuery({ configId });
+    const {
+        data: connectionsTyped,
+        isLoading: isConnectionsLoading,
+        refetch: refetchConnections,
+    } = useGetConfigConnectionsConfigsConfigIdConnectionsGetQuery({ configId });
     const { refetch: refetchAvaliableCals } = useGetConfigAvaliableDevicesConfigsConfigIdAvaliableDevicesGetQuery({
         configId: configId,
         typeName: DeviceType.CAL,
@@ -77,12 +81,12 @@ export const ConfigConnections: FC<ConfigConnectionsProps> = ({ configId }) => {
         const connection = updatedConnections[deletingConnectionIndex];
 
         deleteConnection({ connectionId: connection.id });
-        refetchConnections();
         deletingConnectionType === DeviceType.CAL ? refetchAvaliableCals() : refetchAvaliableUpconv();
 
         const filteredConnections = updatedConnections.filter((conn, i) => i !== deletingConnectionIndex);
         const action = connectionActions[deletingConnectionType];
 
+        refetchConnections();
         dispatch(action(filteredConnections));
         dispatch(attemptActions.setSuccess(false));
         setDeleteConfirmationOpen(false);
@@ -104,6 +108,7 @@ export const ConfigConnections: FC<ConfigConnectionsProps> = ({ configId }) => {
         });
         updatedConnections[index] = updatedConnection;
 
+        refetchConnections();
         const action = connectionActions[deviceType];
         dispatch(action(updatedConnections));
         dispatch(attemptActions.setSuccess(false));
@@ -129,6 +134,7 @@ export const ConfigConnections: FC<ConfigConnectionsProps> = ({ configId }) => {
         });
         updatedConnections[index] = updatedConnection;
 
+        refetchConnections();
         const action = connectionActions[deviceType];
         dispatch(action(updatedConnections));
         dispatch(attemptActions.setSuccess(false));
@@ -150,6 +156,7 @@ export const ConfigConnections: FC<ConfigConnectionsProps> = ({ configId }) => {
         });
         updatedConnections[index] = updatedConnection;
 
+        refetchConnections();
         const action = connectionActions[deviceType];
         dispatch(action(updatedConnections));
         dispatch(attemptActions.setSuccess(false));
@@ -157,35 +164,41 @@ export const ConfigConnections: FC<ConfigConnectionsProps> = ({ configId }) => {
 
     return (
         <Box className={styles.flexBox}>
-            <ConfigConnectionsTyped
-                cals={[SA, ...configCals]}
-                channels={channels}
-                connections={configCals}
-                deviceType={DeviceType.CAL}
-                models={models}
-                onChannelChange={handleChannelChange}
-                onConnectedToChange={handleConnectedToChange}
-                onConnectionDelete={handleDeleteConnection}
-                onModelChange={handleModelChange}
-            />
-            <ConfigConnectionsTyped
-                cals={configCals}
-                channels={channels}
-                connections={configUpconv}
-                deviceType={DeviceType.UPCONV}
-                models={models}
-                onChannelChange={handleChannelChange}
-                onConnectedToChange={handleConnectedToChange}
-                onConnectionDelete={handleDeleteConnection}
-                onModelChange={handleModelChange}
-            />
-            <ConfirmModal
-                content={`Вы уверены, что хотите удалить соединение ${deletingContent}?`}
-                isOpen={deleteConfirmationOpen}
-                title={'Подтверждение удаления'}
-                onClose={handleDeleteConfirmationCancel}
-                onConfirm={handleDeleteConfirmation}
-            />
+            {isConnectionsLoading ? (
+                <CircularProgress size={20} />
+            ) : (
+                <>
+                    <ConfigConnectionsTyped
+                        cals={[SA, ...configCals]}
+                        channels={channels}
+                        connections={configCals}
+                        deviceType={DeviceType.CAL}
+                        models={models}
+                        onChannelChange={handleChannelChange}
+                        onConnectedToChange={handleConnectedToChange}
+                        onConnectionDelete={handleDeleteConnection}
+                        onModelChange={handleModelChange}
+                    />
+                    <ConfigConnectionsTyped
+                        cals={configCals}
+                        channels={channels}
+                        connections={configUpconv}
+                        deviceType={DeviceType.UPCONV}
+                        models={models}
+                        onChannelChange={handleChannelChange}
+                        onConnectedToChange={handleConnectedToChange}
+                        onConnectionDelete={handleDeleteConnection}
+                        onModelChange={handleModelChange}
+                    />
+                    <ConfirmModal
+                        content={`Вы уверены, что хотите удалить соединение ${deletingContent}?`}
+                        isOpen={deleteConfirmationOpen}
+                        title={'Подтверждение удаления'}
+                        onClose={handleDeleteConfirmationCancel}
+                        onConfirm={handleDeleteConfirmation}
+                    />
+                </>
+            )}
         </Box>
     );
 };
