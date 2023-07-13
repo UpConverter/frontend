@@ -4,10 +4,11 @@ import {
 } from '@api/generatedApi';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { Box } from '@mui/material';
-import { Typography } from '@mui/material';
-import { DataGrid, type GridColDef } from '@mui/x-data-grid';
-import { DeviceType } from '@store/entities/attempt/types/DeviceSchema';
+import type { DeviceType } from '@store/entities/attempt/types/DeviceSchema';
+import { AVALIABLE_DEVICES_EMPTY } from '@store/i18n/devices';
 import type { FC } from 'react';
+
+import { DevicesGrid } from '../DevicesGrid/DevicesGrid';
 
 type DeviceModalProps = {
     configId: number;
@@ -18,25 +19,12 @@ type DeviceModalProps = {
 };
 
 export const DeviceModal: FC<DeviceModalProps> = ({ configId, label, type_name, isOpen, onClose }) => {
-    const { data: devices } = useGetConfigAvaliableDevicesConfigsConfigIdAvaliableDevicesGetQuery({
-        configId: configId,
-        typeName: type_name,
-    });
+    const { data: devices, isLoading: isDevicesLoading } =
+        useGetConfigAvaliableDevicesConfigsConfigIdAvaliableDevicesGetQuery({
+            configId: configId,
+            typeName: type_name,
+        });
     const [createConnection] = useCreateNewConnectionConfigsConfigIdConnectionsPostMutation();
-
-    let columns: GridColDef[] = [
-        { field: 'serial_number', headerName: 'Серийный номер', width: 140 },
-        { field: 'name', headerName: 'Имя устройства', width: 200 },
-        { field: 'model_name', headerName: 'Модель', width: 130 },
-    ];
-
-    if (type_name === DeviceType.UPCONV) {
-        columns = [
-            ...columns,
-            { field: 'state_name', headerName: 'Состояние', width: 100 },
-            { field: 'additional_state_name', headerName: 'Дополнительно', width: 130 },
-        ];
-    }
 
     const handleRowClick = (params: any) => {
         if (configId) {
@@ -60,26 +48,13 @@ export const DeviceModal: FC<DeviceModalProps> = ({ configId, label, type_name, 
             <Box minWidth={500}>
                 <DialogTitle>{label}</DialogTitle>
                 <DialogContent>
-                    {devices && devices.length > 0 ? (
-                        <DataGrid
-                            columns={columns}
-                            pageSizeOptions={[5, 10]}
-                            rows={devices}
-                            initialState={{
-                                pagination: {
-                                    paginationModel: { page: 0, pageSize: 5 },
-                                },
-                            }}
-                            onRowClick={handleRowClick}
-                        />
-                    ) : (
-                        <Typography
-                            gutterBottom
-                            variant='body1'
-                        >
-                            Все доступные устройства уже задействованы
-                        </Typography>
-                    )}
+                    <DevicesGrid
+                        devices={devices}
+                        isLoading={isDevicesLoading}
+                        label={AVALIABLE_DEVICES_EMPTY}
+                        type_name={type_name}
+                        onRowClick={handleRowClick}
+                    />
                 </DialogContent>
             </Box>
             <DialogActions>

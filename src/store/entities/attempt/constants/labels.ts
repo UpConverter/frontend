@@ -1,6 +1,7 @@
 export enum MenuItems {
     CUMMON = 'Общие',
     CONFIG = 'Конфигурация системы',
+    DEVICES = 'Доступные устройства',
 }
 
 export const CALS_LABEL = 'Калибровочные модули';

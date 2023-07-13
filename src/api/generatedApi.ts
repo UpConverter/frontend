@@ -84,13 +84,13 @@ const injectedRtkApi = api
                 }),
                 providesTags: ['devices'],
             }),
-            getDevicesByTypesRelatedDevicesByTypesRelatedGet: build.query<
-                GetDevicesByTypesRelatedDevicesByTypesRelatedGetApiResponse,
-                GetDevicesByTypesRelatedDevicesByTypesRelatedGetApiArg
+            getDevicesByTypeRelatedDevicesByTypeRelatedGet: build.query<
+                GetDevicesByTypeRelatedDevicesByTypeRelatedGetApiResponse,
+                GetDevicesByTypeRelatedDevicesByTypeRelatedGetApiArg
             >({
                 query: (queryArg) => ({
-                    url: `/devices/by_types_related`,
-                    params: { type_names: queryArg.typeNames, skip: queryArg.skip, limit: queryArg.limit },
+                    url: `/devices/by_type_related`,
+                    params: { type_name: queryArg.typeName, skip: queryArg.skip, limit: queryArg.limit },
                 }),
                 providesTags: ['devices'],
             }),
@@ -368,10 +368,10 @@ export type GetDevicesByTypesDevicesByTypesGetApiArg = {
     skip?: number;
     limit?: number;
 };
-export type GetDevicesByTypesRelatedDevicesByTypesRelatedGetApiResponse =
+export type GetDevicesByTypeRelatedDevicesByTypeRelatedGetApiResponse =
     /** status 200 Successful Response */ DeviceRelated[];
-export type GetDevicesByTypesRelatedDevicesByTypesRelatedGetApiArg = {
-    typeNames: string[];
+export type GetDevicesByTypeRelatedDevicesByTypeRelatedGetApiArg = {
+    typeName: string;
     skip?: number;
     limit?: number;
 };
@@ -543,15 +543,16 @@ export type Device = {
 };
 export type DeviceRelated = {
     name: string;
+    serial_number: number;
     type_name: string;
     model_name?: string;
     state_name?: string;
     additional_state_name?: string;
     id: number;
-    serial_number: number;
 };
 export type DeviceRelatedCreate = {
     name: string;
+    serial_number: number;
     type_name: string;
     model_name?: string;
     state_name?: string;
@@ -635,7 +636,7 @@ export const {
     useGetDeviceChannelsDevicesChannelsGetQuery,
     useGetDevicesByTypeDevicesByTypeGetQuery,
     useGetDevicesByTypesDevicesByTypesGetQuery,
-    useGetDevicesByTypesRelatedDevicesByTypesRelatedGetQuery,
+    useGetDevicesByTypeRelatedDevicesByTypeRelatedGetQuery,
     useGetDeviceDevicesDeviceIdGetQuery,
     useUpdateExistingDeviceDevicesDeviceIdPutMutation,
     useDeleteExistingDeviceDevicesDeviceIdDeleteMutation,

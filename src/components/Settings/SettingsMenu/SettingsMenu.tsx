@@ -1,4 +1,8 @@
 import { useCreateNewAttemptAttemptsPostMutation } from '@api/generatedApi';
+import { SettingsCommon } from '@components/Settings/SettingsCommon/SettingsCommon';
+import { SettingsConfig } from '@components/Settings/SettingsConfig/SettingsConfig';
+import { SettingsDevices } from '@components/Settings/SettingsDevices/SettingsDevices';
+import { SettingsMenuItem } from '@components/Settings/SettingsMenuItem/SettingsMenuItem';
 import { Alert } from '@components/UI/Alert';
 import { CustomButton } from '@components/UI/CustomButton';
 import { Box, CircularProgress, Divider, Snackbar } from '@mui/material';
@@ -9,9 +13,6 @@ import type { FC } from 'react';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 
-import { SettingsCommon } from '../SettingsCommon/SettingsCommon';
-import { SettingsConfig } from '../SettingsConfig/SettingsConfig';
-import { SettingsMenuItem } from '../SettingsMenuItem/SettingsMenuItem';
 import styles from './SettingsMenu.module.css';
 
 export const SettingsMenu: FC = () => {
@@ -77,6 +78,8 @@ export const SettingsMenu: FC = () => {
                 return <SettingsCommon />;
             case MenuItems.CONFIG:
                 return <SettingsConfig />;
+            case MenuItems.DEVICES:
+                return <SettingsDevices />;
             default:
                 return null;
         }

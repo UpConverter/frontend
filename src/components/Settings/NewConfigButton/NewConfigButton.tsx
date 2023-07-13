@@ -23,16 +23,18 @@ export const NewConfigButton = () => {
     };
 
     const handleSubmit = () => {
-        createConfiguration({ configurationCreate: { name: configurationName } })
-            .unwrap()
-            .then((response) => {
-                const newConfiguration = {
-                    name: response.name,
-                    id: response.id,
-                };
-                dispatch(attemptActions.setConfiguration(newConfiguration));
-                handleClose();
-            });
+        if (configurationName) {
+            createConfiguration({ configurationCreate: { name: configurationName } })
+                .unwrap()
+                .then((response) => {
+                    const newConfiguration = {
+                        name: response.name,
+                        id: response.id,
+                    };
+                    dispatch(attemptActions.setConfiguration(newConfiguration));
+                });
+        }
+        handleClose();
     };
 
     return (

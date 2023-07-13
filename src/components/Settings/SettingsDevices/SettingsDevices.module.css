@@ -1,0 +1,17 @@
+.mainContainer {
+    display: flex;
+    justify-content: space-between;
+}
+
+.inlineContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 10px;
+}
+
+.mr {
+    margin-right: 30px;
+}
