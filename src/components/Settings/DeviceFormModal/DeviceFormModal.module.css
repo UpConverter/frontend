@@ -1,0 +1,33 @@
+.lineContainer {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.serialNumber,
+.name,
+.model,
+.state,
+.addState {
+    margin: 5px;
+}
+
+.serialNumber {
+    width: 140px;
+}
+
+.name {
+    width: 200px;
+}
+
+.model {
+    width: 130px;
+}
+
+.state {
+    width: 100px;
+}
+
+.addState {
+    width: 130px;
+}

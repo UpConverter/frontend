@@ -1,10 +1,12 @@
 import { type DeviceRelated } from '@api/generatedApi';
+import AddIcon from '@mui/icons-material/Add';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
-import { Box, CircularProgress, IconButton, Typography } from '@mui/material';
-import { DataGrid, type GridColDef } from '@mui/x-data-grid';
+import EditIcon from '@mui/icons-material/Edit';
+import { Box, Button, CircularProgress, Typography } from '@mui/material';
+import { DataGrid, GridActionsCellItem, type GridColDef, GridToolbarContainer } from '@mui/x-data-grid';
 import { DeviceType } from '@store/entities/attempt/types/DeviceSchema';
 import { DEVICES_EMPTY } from '@store/i18n/devices';
-import type { FC } from 'react';
+import { type FC } from 'react';
 
 import styles from './DevicesGrid.module.css';
 
@@ -14,7 +16,9 @@ type DevicesGridProps = {
     devices: DeviceRelated[] | undefined;
     label?: string;
     onRowClick?: (params: any) => void;
-    onRowDelete?: (params: any) => void;
+    onRowAdd?: () => void;
+    onRowEdit?: (row: any) => () => void;
+    onRowDelete?: (row: any) => () => void;
 };
 
 export const DevicesGrid: FC<DevicesGridProps> = ({
@@ -24,6 +28,8 @@ export const DevicesGrid: FC<DevicesGridProps> = ({
     label,
     onRowClick,
     onRowDelete,
+    onRowAdd,
+    onRowEdit,
 }) => {
     let columns: GridColDef[] = [
         { field: 'serial_number', headerName: 'Серийный номер', width: 140 },
@@ -39,17 +45,49 @@ export const DevicesGrid: FC<DevicesGridProps> = ({
         ];
     }
 
-    if (onRowDelete) {
-        columns.push({
-            field: 'delete',
-            headerName: 'Удалить',
-            width: 100,
-            renderCell: (params) => (
-                <IconButton onClick={() => onRowDelete(params)}>
-                    <DeleteOutlinedIcon />
-                </IconButton>
-            ),
-        });
+    if (onRowDelete && onRowEdit) {
+        columns = [
+            ...columns,
+            {
+                field: 'actions',
+                type: 'actions',
+                headerName: 'Действия',
+                width: 100,
+                cellClassName: 'actions',
+                getActions: ({ row }) => {
+                    return [
+                        <GridActionsCellItem
+                            color='inherit'
+                            icon={<EditIcon />}
+                            key='edit'
+                            label='Edit'
+                            onClick={onRowEdit(row)}
+                        />,
+                        <GridActionsCellItem
+                            color='inherit'
+                            icon={<DeleteOutlinedIcon />}
+                            key='delete'
+                            label='Delete'
+                            onClick={onRowDelete(row)}
+                        />,
+                    ];
+                },
+            },
+        ];
+    }
+
+    function EditToolbar() {
+        return (
+            <GridToolbarContainer>
+                <Button
+                    color='primary'
+                    startIcon={<AddIcon />}
+                    onClick={onRowAdd}
+                >
+                    Добавить
+                </Button>
+            </GridToolbarContainer>
+        );
     }
 
     return (
@@ -66,6 +104,9 @@ export const DevicesGrid: FC<DevicesGridProps> = ({
                         pagination: {
                             paginationModel: { page: 0, pageSize: 5 },
                         },
+                    }}
+                    slots={{
+                        toolbar: onRowAdd ? EditToolbar : undefined,
                     }}
                     onRowClick={onRowClick}
                 />

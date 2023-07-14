@@ -119,6 +119,13 @@ const injectedRtkApi = api
                 query: (queryArg) => ({ url: `/devices/${queryArg.deviceId}`, method: 'DELETE' }),
                 invalidatesTags: ['devices'],
             }),
+            createNewCalDevicesCalPost: build.mutation<
+                CreateNewCalDevicesCalPostApiResponse,
+                CreateNewCalDevicesCalPostApiArg
+            >({
+                query: (queryArg) => ({ url: `/devices/cal`, method: 'POST', body: queryArg.calCreate }),
+                invalidatesTags: ['devices'],
+            }),
             createNewDeviceDevicesPost: build.mutation<
                 CreateNewDeviceDevicesPostApiResponse,
                 CreateNewDeviceDevicesPostApiArg
@@ -388,6 +395,10 @@ export type DeleteExistingDeviceDevicesDeviceIdDeleteApiResponse = /** status 20
 export type DeleteExistingDeviceDevicesDeviceIdDeleteApiArg = {
     deviceId: number;
 };
+export type CreateNewCalDevicesCalPostApiResponse = /** status 200 Successful Response */ Device;
+export type CreateNewCalDevicesCalPostApiArg = {
+    calCreate: CalCreate;
+};
 export type CreateNewDeviceDevicesPostApiResponse = /** status 200 Successful Response */ Device;
 export type CreateNewDeviceDevicesPostApiArg = {
     deviceRelatedCreate: DeviceRelatedCreate;
@@ -539,11 +550,11 @@ export type Device = {
     state_id?: number;
     additional_state_id?: number;
     id: number;
-    serial_number: number;
+    serial_number: string;
 };
 export type DeviceRelated = {
     name: string;
-    serial_number: number;
+    serial_number: string;
     type_name: string;
     model_name?: string;
     state_name?: string;
@@ -552,11 +563,17 @@ export type DeviceRelated = {
 };
 export type DeviceRelatedCreate = {
     name: string;
-    serial_number: number;
+    serial_number: string;
     type_name: string;
     model_name?: string;
     state_name?: string;
     additional_state_name?: string;
+};
+export type CalCreate = {
+    name: string;
+    serial_number: string;
+    type_name: string;
+    model_name?: string;
 };
 export type Connection = {
     device_id: number;
@@ -640,6 +657,7 @@ export const {
     useGetDeviceDevicesDeviceIdGetQuery,
     useUpdateExistingDeviceDevicesDeviceIdPutMutation,
     useDeleteExistingDeviceDevicesDeviceIdDeleteMutation,
+    useCreateNewCalDevicesCalPostMutation,
     useCreateNewDeviceDevicesPostMutation,
     useUpdateExistingDeviceDevicesDeviceIdModelPutMutation,
     useUpdateExistingConnectionConnectionsConnectionIdPutMutation,
