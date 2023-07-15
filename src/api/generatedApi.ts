@@ -489,7 +489,7 @@ export type GetAttemptsAttemptsGetApiArg = {
     skip?: number;
     limit?: number;
 };
-export type CreateNewAttemptAttemptsPostApiResponse = /** status 200 Successful Response */ Attempt;
+export type CreateNewAttemptAttemptsPostApiResponse = /** status 200 Successful Response */ AttemptStatus;
 export type CreateNewAttemptAttemptsPostApiArg = {
     attemptRelatedCreate: AttemptRelatedCreate;
 };
@@ -618,8 +618,15 @@ export type Attempt = {
     speed_id: number;
     port_id: number;
     id: number;
-    success: boolean;
     timestamp: string;
+};
+export type AttemptStatus = {
+    configuration_id: number;
+    speed_id: number;
+    port_id: number;
+    id: number;
+    timestamp: string;
+    success: boolean;
 };
 export type AttemptRelatedCreate = {
     configuration_id: number;
@@ -630,13 +637,14 @@ export type AttemptRelated = {
     configuration_id: number;
     speed: number;
     port: string;
+    id: number;
     configuration: string;
-    success: boolean;
 };
 export type AttemptConnections = {
     config_cals: Connections[];
     config_upconv: Connections[];
     attempt: AttemptRelated;
+    success: boolean;
 };
 export type AttemptCreate = {
     configuration_id: number;

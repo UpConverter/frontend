@@ -5,8 +5,10 @@ import { SettingsDevices } from '@components/Settings/SettingsDevices/SettingsDe
 import { SettingsMenuItem } from '@components/Settings/SettingsMenuItem/SettingsMenuItem';
 import { Alert } from '@components/UI/Alert';
 import { CustomButton } from '@components/UI/CustomButton';
+import { useAppDispatch } from '@hooks/useAppDispatch';
 import { Box, CircularProgress, Divider, Snackbar } from '@mui/material';
-import { getAttemptConfigId, getAttemptPort, getAttemptSpeed, getAttemptSuccess } from '@store/entities/attempt';
+import { getAttemptConfigId, getAttemptPort, getAttemptSpeed } from '@store/entities/attempt';
+import { attemptActions } from '@store/entities/attempt';
 import { ERROR_CREATE_ATTEMPT, SUCCESS_CREATE_ATTEMPT } from '@store/entities/attempt/constants/errors';
 import { MenuItems } from '@store/entities/attempt/constants/labels';
 import type { FC } from 'react';
@@ -16,10 +18,10 @@ import { useSelector } from 'react-redux';
 import styles from './SettingsMenu.module.css';
 
 export const SettingsMenu: FC = () => {
+    const dispatch = useAppDispatch();
     const configuration_id = useSelector(getAttemptConfigId);
     const speed = useSelector(getAttemptSpeed);
     const port = useSelector(getAttemptPort);
-    const success = useSelector(getAttemptSuccess);
     const [createNewAttempt, { isLoading }] = useCreateNewAttemptAttemptsPostMutation();
     const [selectedType, setSelectedType] = useState<MenuItems>(() => {
         const storedType = localStorage.getItem('selectedType');
@@ -53,11 +55,13 @@ export const SettingsMenu: FC = () => {
             .unwrap()
             .then((response) => {
                 const { success } = response;
+                dispatch(attemptActions.setSuccess(success));
                 setMessage(success ? SUCCESS_CREATE_ATTEMPT : ERROR_CREATE_ATTEMPT);
                 setShowSnackbar(true);
             })
             .catch((error) => {
-                setMessage(ERROR_CREATE_ATTEMPT);
+                setMessage(error.data?.detail || ERROR_CREATE_ATTEMPT);
+                dispatch(attemptActions.setSuccess(false));
                 setShowSnackbar(true);
                 console.error(error);
             });
@@ -119,7 +123,7 @@ export const SettingsMenu: FC = () => {
                 onClose={handleSnackbarClose}
             >
                 <Alert
-                    severity={success ? 'success' : 'error'}
+                    severity={message == SUCCESS_CREATE_ATTEMPT ? 'success' : 'error'}
                     onClose={handleSnackbarClose}
                 >
                     {message}

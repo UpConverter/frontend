@@ -1,6 +1,8 @@
 import type { DeviceRelatedCreate } from '@api/generatedApi';
 import {
     useDeleteExistingDeviceDevicesDeviceIdDeleteMutation,
+    useGetConfigAvaliableDevicesConfigsConfigIdAvaliableDevicesGetQuery,
+    useGetConfigConnectionsConfigsConfigIdConnectionsGetQuery,
     useGetDevicesByTypeRelatedDevicesByTypeRelatedGetQuery,
 } from '@api/generatedApi';
 import { DeviceFormModal } from '@components/Settings/DeviceFormModal/DeviceFormModal';
@@ -8,6 +10,7 @@ import { DevicesGrid } from '@components/Settings/DevicesGrid/DevicesGrid';
 import { ConfirmModal } from '@components/UI/ConfirmModal/ConfirmModal';
 import { CustomButton } from '@components/UI/CustomButton';
 import { Alert, Box, InputLabel, Snackbar } from '@mui/material';
+import { getAttemptConfigId } from '@store/entities/attempt';
 import { DeviceType } from '@store/entities/attempt/types/DeviceSchema';
 import {
     AVALIABLE_CALS,
@@ -18,6 +21,7 @@ import {
 } from '@store/i18n/devices';
 import { EDIT_CAL, EDIT_UPCONVERTER, NEW_CAL, NEW_UPCONVERTER } from '@store/i18n/devices';
 import { useState } from 'react';
+import { useSelector } from 'react-redux';
 
 import styles from './SettingsDevices.module.css';
 
@@ -33,7 +37,18 @@ export const SettingsDevices = () => {
             skip: 0,
             limit: 100,
         });
-
+    const configId = useSelector(getAttemptConfigId);
+    const { refetch: refetchAvaliableCals } = useGetConfigAvaliableDevicesConfigsConfigIdAvaliableDevicesGetQuery({
+        configId: configId || 0,
+        typeName: DeviceType.CAL,
+    });
+    const { refetch: refetchAvaliableUpconv } = useGetConfigAvaliableDevicesConfigsConfigIdAvaliableDevicesGetQuery({
+        configId: configId || 0,
+        typeName: DeviceType.UPCONV,
+    });
+    const { refetch: refetchConnections } = useGetConfigConnectionsConfigsConfigIdConnectionsGetQuery({
+        configId: configId || 0,
+    });
     const [newDeviceOpen, setNewDeviceOpen] = useState(false);
     const [title, setTitle] = useState(NEW_CAL);
     const [currentDeviceId, setCurrentDeviceId] = useState<number | undefined>();
@@ -79,6 +94,10 @@ export const SettingsDevices = () => {
                 setShowSnackbar(true);
                 console.error(error);
             });
+        if (configId) {
+            refetchConnections();
+            deletingDevice.type_name === DeviceType.CAL ? refetchAvaliableCals() : refetchAvaliableUpconv();
+        }
         setDeleteConfirmationOpen(false);
     };
 

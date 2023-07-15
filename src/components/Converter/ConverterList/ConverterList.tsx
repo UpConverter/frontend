@@ -1,6 +1,7 @@
+import { useGetLastAttemptAttemptsLastGetQuery } from '@api/generatedApi';
 import { getRouteSettings } from '@app/providers/AppRouter';
 import { Box, Button, Typography } from '@mui/material';
-import { getAttemptSuccess, getAttemptUpconv } from '@store/entities/attempt';
+import { getAttemptSuccess } from '@store/entities/attempt';
 import { ERROR_SUCCESS_ATTEMPT_BEGIN, ERROR_SUCCESS_ATTEMPT_END } from '@store/entities/attempt/constants/errors';
 import { useSelector } from 'react-redux';
 import { Link as RouterLink } from 'react-router-dom';
@@ -10,7 +11,7 @@ import styles from './ConverterList.module.css';
 
 export const ConverterList = () => {
     const attemptSuccess = useSelector(getAttemptSuccess);
-    const upconverters = useSelector(getAttemptUpconv);
+    const { data: lustAttempt } = useGetLastAttemptAttemptsLastGetQuery();
 
     if (!attemptSuccess) {
         return (
@@ -39,7 +40,7 @@ export const ConverterList = () => {
 
     return (
         <Box className={styles.listContainer}>
-            {upconverters.map((upconv, idx) => (
+            {lustAttempt?.config_upconv.map((upconv, idx) => (
                 <ConverterItem
                     connected_to_device={upconv.connected_to_device}
                     connected_to_device_channel={upconv.connected_to_device_channel}

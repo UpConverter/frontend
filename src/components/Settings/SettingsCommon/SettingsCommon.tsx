@@ -5,8 +5,7 @@ import { LabelLine } from '@components/UI/LabelLine';
 import { useAppDispatch } from '@hooks/useAppDispatch';
 import type { SelectChangeEvent } from '@mui/material';
 import { Box } from '@mui/material';
-import { attemptActions } from '@store/entities/attempt';
-import { getAttempt } from '@store/entities/attempt';
+import { attemptActions, getAttemptPort, getAttemptSpeed } from '@store/entities/attempt';
 import type { FC } from 'react';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -16,7 +15,8 @@ export const SettingsCommon: FC = () => {
     const { data: ports } = useGetPortsPortsGetQuery({ skip: 0, limit: 100 });
     const { data: speeds } = useGetSpeedsSpeedsGetQuery({ skip: 0, limit: 100 });
     const dispatch = useAppDispatch();
-    const attempt = useSelector(getAttempt);
+    const port = useSelector(getAttemptPort);
+    const speed = useSelector(getAttemptSpeed);
 
     const [selectedLanguage, setSelectedLanguage] = useState('ru');
 
@@ -42,7 +42,7 @@ export const SettingsCommon: FC = () => {
                         className={styles.selectControl}
                         data={ports.map((port) => ({ id: port.id, value: port.name }))}
                         size='small'
-                        value={attempt.port}
+                        value={port}
                         onChange={handlePortChange}
                     />
                 )}
@@ -53,7 +53,7 @@ export const SettingsCommon: FC = () => {
                         className={styles.selectControl}
                         data={speeds}
                         size='small'
-                        value={attempt.speed}
+                        value={speed}
                         onChange={handleSpeedChange}
                     />
                 )}

@@ -1,12 +1,9 @@
 import type { AttemptConnections } from '@api/generatedApi';
-import type { Connections } from '@api/generatedApi';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from '@reduxjs/toolkit';
 import type { AttemptState, Configuration } from '@store/entities/attempt/types/AttemptSchema';
 
 const initialState: AttemptState = {
-    cals: [],
-    upconv: [],
     configuration: {
         id: undefined,
         name: undefined,
@@ -21,13 +18,13 @@ const attemptSlice = createSlice({
     initialState,
     reducers: {
         setAttempt: (state, action: PayloadAction<AttemptConnections | undefined>) => {
-            state.cals = action.payload?.config_cals || [];
-            state.upconv = action.payload?.config_upconv || [];
-            state.configuration.id = action.payload?.attempt.configuration_id;
-            state.configuration.name = action.payload?.attempt.configuration;
-            state.port = action.payload?.attempt.port;
-            state.speed = action.payload?.attempt.speed;
-            state.success = action.payload?.attempt.success || false;
+            if (action.payload) {
+                state.configuration.id = action.payload.attempt.configuration_id;
+                state.configuration.name = action.payload.attempt.configuration;
+                state.port = action.payload.attempt.port;
+                state.speed = action.payload.attempt.speed;
+                state.success = action.payload.success;
+            }
         },
         setConfiguration: (state, action: PayloadAction<Configuration | undefined>) => {
             state.configuration.id = action.payload?.id;
@@ -44,12 +41,6 @@ const attemptSlice = createSlice({
         },
         setSuccess: (state, action: PayloadAction<boolean>) => {
             state.success = action.payload;
-        },
-        setUpconv: (state, action: PayloadAction<Connections[]>) => {
-            state.upconv = action.payload;
-        },
-        setCals: (state, action: PayloadAction<Connections[]>) => {
-            state.cals = action.payload;
         },
     },
 });

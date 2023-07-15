@@ -2,8 +2,10 @@ import {
     useCreateNewConnectionConfigsConfigIdConnectionsPostMutation,
     useGetConfigAvaliableDevicesConfigsConfigIdAvaliableDevicesGetQuery,
 } from '@api/generatedApi';
+import { useAppDispatch } from '@hooks/useAppDispatch';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { Box } from '@mui/material';
+import { attemptActions } from '@store/entities/attempt';
 import type { DeviceType } from '@store/entities/attempt/types/DeviceSchema';
 import { AVALIABLE_DEVICES_EMPTY } from '@store/i18n/devices';
 import type { FC } from 'react';
@@ -19,6 +21,7 @@ type DeviceModalProps = {
 };
 
 export const DeviceModal: FC<DeviceModalProps> = ({ configId, label, type_name, isOpen, onClose }) => {
+    const dispatch = useAppDispatch();
     const { data: devices, isLoading: isDevicesLoading } =
         useGetConfigAvaliableDevicesConfigsConfigIdAvaliableDevicesGetQuery({
             configId: configId,
@@ -34,6 +37,7 @@ export const DeviceModal: FC<DeviceModalProps> = ({ configId, label, type_name, 
                     device_id: params.row.id,
                 },
             });
+            dispatch(attemptActions.setSuccess(false));
         }
         onClose();
     };

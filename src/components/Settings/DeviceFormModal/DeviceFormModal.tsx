@@ -1,6 +1,8 @@
 import {
     type DeviceRelatedCreate,
     useCreateNewDeviceDevicesPostMutation,
+    useGetConfigAvaliableDevicesConfigsConfigIdAvaliableDevicesGetQuery,
+    useGetConfigConnectionsConfigsConfigIdConnectionsGetQuery,
     useGetDeviceAdditionalStatesDevicesAdditionalStatesGetQuery,
     useGetDeviceModelsDevicesModelsGetQuery,
     useGetDeviceStatesDevicesStatesGetQuery,
@@ -19,9 +21,11 @@ import {
     TextField,
     Typography,
 } from '@mui/material';
+import { getAttemptConfigId } from '@store/entities/attempt';
 import { DeviceType } from '@store/entities/attempt/types/DeviceSchema';
 import type { ChangeEvent, FC } from 'react';
 import { useState } from 'react';
+import { useSelector } from 'react-redux';
 
 import styles from './DeviceFormModal.module.css';
 
@@ -40,6 +44,14 @@ export const DeviceFormModal: FC<DeviceFormModalProps> = ({ title, isOpen, onClo
     const { data: additionalStates } = useGetDeviceAdditionalStatesDevicesAdditionalStatesGetQuery({
         skip: 0,
         limit: 100,
+    });
+    const configId = useSelector(getAttemptConfigId);
+    const { refetch: refetchAvaliableDevices } = useGetConfigAvaliableDevicesConfigsConfigIdAvaliableDevicesGetQuery({
+        configId: configId || 0,
+        typeName: device.type_name,
+    });
+    const { refetch: refetchConnections } = useGetConfigConnectionsConfigsConfigIdConnectionsGetQuery({
+        configId: configId || 0,
     });
 
     const [message, setMessage] = useState('');
@@ -118,6 +130,11 @@ export const DeviceFormModal: FC<DeviceFormModalProps> = ({ title, isOpen, onClo
             handleUpdateDevice(deviceId);
         } else {
             handleCreateDevice();
+        }
+
+        if (configId) {
+            refetchAvaliableDevices();
+            refetchConnections();
         }
     };
 
