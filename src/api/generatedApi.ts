@@ -577,7 +577,6 @@ export type CalCreate = {
 };
 export type Connection = {
     device_id: number;
-    model_id?: string;
     connected_to_device_id?: number;
     connected_to_device_channel_id?: number;
     id: number;
@@ -586,8 +585,8 @@ export type Connection = {
 export type ConnectionRelatedCreate = {
     device_id: number;
     device: string;
-    model_name?: string;
     connected_to_device?: string;
+    connected_to_device_model_name?: string;
     connected_to_device_channel?: string;
 };
 export type Configuration = {
@@ -600,10 +599,12 @@ export type ConfigurationCreate = {
 export type Connections = {
     device_id: number;
     device: string;
-    model_name?: string;
     connected_to_device?: string;
+    connected_to_device_model_name?: string;
     connected_to_device_channel?: string;
     id: number;
+    serial_number: string;
+    model_name?: string;
     state_name?: string;
 };
 export type ConnectionsTyped = {

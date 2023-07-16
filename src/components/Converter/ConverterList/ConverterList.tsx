@@ -48,6 +48,7 @@ export const ConverterList = () => {
                     device_id={upconv.device_id}
                     id={upconv.id}
                     key={idx}
+                    serial_number={upconv.serial_number}
                     state_name={upconv.state_name}
                 />
             ))}
