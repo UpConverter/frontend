@@ -133,14 +133,25 @@ const injectedRtkApi = api
                 query: (queryArg) => ({ url: `/devices/`, method: 'POST', body: queryArg.deviceRelatedCreate }),
                 invalidatesTags: ['devices'],
             }),
-            updateExistingDeviceDevicesDeviceIdModelPut: build.mutation<
-                UpdateExistingDeviceDevicesDeviceIdModelPutApiResponse,
-                UpdateExistingDeviceDevicesDeviceIdModelPutApiArg
+            updateExistingDeviceModelDevicesDeviceIdModelPut: build.mutation<
+                UpdateExistingDeviceModelDevicesDeviceIdModelPutApiResponse,
+                UpdateExistingDeviceModelDevicesDeviceIdModelPutApiArg
             >({
                 query: (queryArg) => ({
                     url: `/devices/${queryArg.deviceId}/model`,
                     method: 'PUT',
                     params: { model: queryArg.model },
+                }),
+                invalidatesTags: ['devices'],
+            }),
+            updateExistingDeviceStateDevicesDeviceIdStatePut: build.mutation<
+                UpdateExistingDeviceStateDevicesDeviceIdStatePutApiResponse,
+                UpdateExistingDeviceStateDevicesDeviceIdStatePutApiArg
+            >({
+                query: (queryArg) => ({
+                    url: `/devices/${queryArg.deviceId}/state`,
+                    method: 'PUT',
+                    body: queryArg.updateDeviceState,
                 }),
                 invalidatesTags: ['devices'],
             }),
@@ -403,10 +414,15 @@ export type CreateNewDeviceDevicesPostApiResponse = /** status 200 Successful Re
 export type CreateNewDeviceDevicesPostApiArg = {
     deviceRelatedCreate: DeviceRelatedCreate;
 };
-export type UpdateExistingDeviceDevicesDeviceIdModelPutApiResponse = /** status 200 Successful Response */ Device;
-export type UpdateExistingDeviceDevicesDeviceIdModelPutApiArg = {
+export type UpdateExistingDeviceModelDevicesDeviceIdModelPutApiResponse = /** status 200 Successful Response */ Device;
+export type UpdateExistingDeviceModelDevicesDeviceIdModelPutApiArg = {
     deviceId: number;
     model: string;
+};
+export type UpdateExistingDeviceStateDevicesDeviceIdStatePutApiResponse = /** status 200 Successful Response */ Device;
+export type UpdateExistingDeviceStateDevicesDeviceIdStatePutApiArg = {
+    deviceId: number;
+    updateDeviceState: UpdateDeviceState;
 };
 export type UpdateExistingConnectionConnectionsConnectionIdPutApiResponse =
     /** status 200 Successful Response */ Connection;
@@ -575,6 +591,24 @@ export type CalCreate = {
     type_name: string;
     model_name?: string;
 };
+export type Connections = {
+    device_id: number;
+    device: string;
+    connected_to_device?: string;
+    connected_to_device_model_name?: string;
+    connected_to_device_channel?: string;
+    id: number;
+    serial_number: string;
+    model_name?: string;
+    state_name?: string;
+};
+export type UpdateDeviceState = {
+    config_cals: Connections[];
+    config_upconv: Connections[];
+    port: string;
+    speed: number;
+    state: string;
+};
 export type Connection = {
     device_id: number;
     connected_to_device_id?: number;
@@ -595,17 +629,6 @@ export type Configuration = {
 };
 export type ConfigurationCreate = {
     name: string;
-};
-export type Connections = {
-    device_id: number;
-    device: string;
-    connected_to_device?: string;
-    connected_to_device_model_name?: string;
-    connected_to_device_channel?: string;
-    id: number;
-    serial_number: string;
-    model_name?: string;
-    state_name?: string;
 };
 export type ConnectionsTyped = {
     config_cals: Connections[];
@@ -668,7 +691,8 @@ export const {
     useDeleteExistingDeviceDevicesDeviceIdDeleteMutation,
     useCreateNewCalDevicesCalPostMutation,
     useCreateNewDeviceDevicesPostMutation,
-    useUpdateExistingDeviceDevicesDeviceIdModelPutMutation,
+    useUpdateExistingDeviceModelDevicesDeviceIdModelPutMutation,
+    useUpdateExistingDeviceStateDevicesDeviceIdStatePutMutation,
     useUpdateExistingConnectionConnectionsConnectionIdPutMutation,
     useDeleteExistingConnectionConnectionsConnectionIdDeleteMutation,
     useUpdateExistingConnectionChannelConnectionsConnectionIdChannelPutMutation,

@@ -1,4 +1,7 @@
-import { useGetLastAttemptAttemptsLastGetQuery } from '@api/generatedApi';
+import {
+    useGetLastAttemptAttemptsLastGetQuery,
+    useUpdateExistingDeviceStateDevicesDeviceIdStatePutMutation,
+} from '@api/generatedApi';
 import { getRouteSettings } from '@app/providers/AppRouter';
 import { Box, Button, Typography } from '@mui/material';
 import { getAttemptSuccess } from '@store/entities/attempt';
@@ -10,8 +13,9 @@ import { ConverterItem } from '../ConverterItem/ConverterItem';
 import styles from './ConverterList.module.css';
 
 export const ConverterList = () => {
+    const { data: lustAttempt, refetch: refetchLastAttempt } = useGetLastAttemptAttemptsLastGetQuery();
     const attemptSuccess = useSelector(getAttemptSuccess);
-    const { data: lustAttempt } = useGetLastAttemptAttemptsLastGetQuery();
+    const [updateState] = useUpdateExistingDeviceStateDevicesDeviceIdStatePutMutation();
 
     if (!attemptSuccess) {
         return (
@@ -38,18 +42,39 @@ export const ConverterList = () => {
         );
     }
 
+    const handleStateUpdate = (deviceId: number, newState: string) => {
+        if (lustAttempt) {
+            updateState({
+                deviceId: deviceId,
+                updateDeviceState: {
+                    config_cals: lustAttempt.config_cals,
+                    config_upconv: lustAttempt.config_upconv,
+                    port: lustAttempt.attempt.port,
+                    speed: lustAttempt.attempt.speed,
+                    state: newState,
+                },
+            })
+                .unwrap()
+                .then((response) => {
+                    // onClose();
+                    console.log(response);
+                })
+                .catch((error) => {
+                    console.error(error);
+                    // setMessage(error.data?.detail || 'Ошибка создания устройства');
+                    // setShowSnackbar(true);
+                });
+        }
+        refetchLastAttempt();
+    };
+
     return (
         <Box className={styles.listContainer}>
             {lustAttempt?.config_upconv.map((upconv, idx) => (
                 <ConverterItem
-                    connected_to_device={upconv.connected_to_device}
-                    connected_to_device_channel={upconv.connected_to_device_channel}
-                    device={upconv.device}
-                    device_id={upconv.device_id}
-                    id={upconv.id}
+                    device={upconv}
                     key={idx}
-                    serial_number={upconv.serial_number}
-                    state_name={upconv.state_name}
+                    onStateUpdate={handleStateUpdate}
                 />
             ))}
         </Box>

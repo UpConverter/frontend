@@ -6,7 +6,7 @@ import {
     useGetDeviceModelsDevicesModelsGetQuery,
     useUpdateExistingConnectionChannelConnectionsConnectionIdChannelPutMutation,
     useUpdateExistingConnectionConnectedToConnectionsConnectionIdConnectedToPutMutation,
-    useUpdateExistingDeviceDevicesDeviceIdModelPutMutation,
+    useUpdateExistingDeviceModelDevicesDeviceIdModelPutMutation,
 } from '@api/generatedApi';
 import { ConfigConnectionsTyped } from '@components/Settings/ConfigConnectionsTyped/ConfigConnectionsTyped';
 import { ConfirmModal } from '@components/UI/ConfirmModal/ConfirmModal';
@@ -50,7 +50,7 @@ export const ConfigConnections: FC<ConfigConnectionsProps> = ({ configId }) => {
 
     const [updateChannel] = useUpdateExistingConnectionChannelConnectionsConnectionIdChannelPutMutation();
     const [updateConnectedTo] = useUpdateExistingConnectionConnectedToConnectionsConnectionIdConnectedToPutMutation();
-    const [updateDeviceModel] = useUpdateExistingDeviceDevicesDeviceIdModelPutMutation();
+    const [updateDeviceModel] = useUpdateExistingDeviceModelDevicesDeviceIdModelPutMutation();
     const [deleteConnection] = useDeleteExistingConnectionConnectionsConnectionIdDeleteMutation();
 
     const handleDeleteConnection = (index: number, deviceType: DeviceType) => {
