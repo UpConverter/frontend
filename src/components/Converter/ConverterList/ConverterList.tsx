@@ -3,8 +3,9 @@ import {
     useUpdateExistingDeviceStateDevicesDeviceIdStatePutMutation,
 } from '@api/generatedApi';
 import { getRouteSettings } from '@app/providers/AppRouter';
+import { useAppDispatch } from '@hooks/useAppDispatch';
 import { Box, Button, Typography } from '@mui/material';
-import { getAttemptSuccess } from '@store/entities/attempt';
+import { attemptActions, getAttemptToken } from '@store/entities/attempt';
 import { ERROR_SUCCESS_ATTEMPT_BEGIN, ERROR_SUCCESS_ATTEMPT_END } from '@store/entities/attempt/constants/errors';
 import { useSelector } from 'react-redux';
 import { Link as RouterLink } from 'react-router-dom';
@@ -13,11 +14,12 @@ import { ConverterItem } from '../ConverterItem/ConverterItem';
 import styles from './ConverterList.module.css';
 
 export const ConverterList = () => {
+    const dispatch = useAppDispatch();
     const { data: lustAttempt, refetch: refetchLastAttempt } = useGetLastAttemptAttemptsLastGetQuery();
-    const attemptSuccess = useSelector(getAttemptSuccess);
+    const attemptToken = useSelector(getAttemptToken);
     const [updateState] = useUpdateExistingDeviceStateDevicesDeviceIdStatePutMutation();
 
-    if (!attemptSuccess) {
+    if (!attemptToken) {
         return (
             <Box className={styles.errorContainer}>
                 <Box className={styles.errorBox}>
@@ -43,21 +45,18 @@ export const ConverterList = () => {
     }
 
     const handleStateUpdate = (deviceId: number, newState: string) => {
-        if (lustAttempt) {
+        if (attemptToken) {
             updateState({
                 deviceId: deviceId,
-                updateDeviceState: {
-                    config_cals: lustAttempt.config_cals,
-                    config_upconv: lustAttempt.config_upconv,
-                    port: lustAttempt.attempt.port,
-                    speed: lustAttempt.attempt.speed,
-                    state: newState,
-                },
+                newState: newState,
+                attemptToken: attemptToken,
             })
                 .unwrap()
                 .then((response) => {
                     // onClose();
                     console.log(response);
+                    dispatch(attemptActions.setAttemptToken(response.attemptToken));
+                    refetchLastAttempt();
                 })
                 .catch((error) => {
                     console.error(error);
@@ -65,7 +64,6 @@ export const ConverterList = () => {
                     // setShowSnackbar(true);
                 });
         }
-        refetchLastAttempt();
     };
 
     return (

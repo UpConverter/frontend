@@ -10,7 +10,7 @@ const initialState: AttemptState = {
     },
     port: undefined,
     speed: undefined,
-    success: false,
+    attempt_token: undefined,
 };
 
 const attemptSlice = createSlice({
@@ -23,24 +23,24 @@ const attemptSlice = createSlice({
                 state.configuration.name = action.payload.attempt.configuration;
                 state.port = action.payload.attempt.port;
                 state.speed = action.payload.attempt.speed;
-                state.success = action.payload.success;
+                state.attempt_token = action.payload.attempt_token;
             }
         },
         setConfiguration: (state, action: PayloadAction<Configuration | undefined>) => {
             state.configuration.id = action.payload?.id;
             state.configuration.name = action.payload?.name;
-            state.success = false;
+            state.attempt_token = undefined;
         },
         setPort: (state, action: PayloadAction<string>) => {
             state.port = action.payload;
-            state.success = false;
+            state.attempt_token = undefined;
         },
         setSpeed: (state, action: PayloadAction<number>) => {
             state.speed = action.payload;
-            state.success = false;
+            state.attempt_token = undefined;
         },
-        setSuccess: (state, action: PayloadAction<boolean>) => {
-            state.success = action.payload;
+        setAttemptToken: (state, action: PayloadAction<string | undefined>) => {
+            state.attempt_token = action.payload;
         },
     },
 });

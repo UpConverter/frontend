@@ -37,7 +37,7 @@ export const DeviceModal: FC<DeviceModalProps> = ({ configId, label, type_name, 
                     device_id: params.row.id,
                 },
             });
-            dispatch(attemptActions.setSuccess(false));
+            dispatch(attemptActions.setAttemptToken(undefined));
         }
         onClose();
     };

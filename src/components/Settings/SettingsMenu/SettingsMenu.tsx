@@ -54,14 +54,14 @@ export const SettingsMenu: FC = () => {
         })
             .unwrap()
             .then((response) => {
-                const { success } = response;
-                dispatch(attemptActions.setSuccess(success));
-                setMessage(success ? SUCCESS_CREATE_ATTEMPT : ERROR_CREATE_ATTEMPT);
+                const { attempt_token } = response;
+                dispatch(attemptActions.setAttemptToken(attempt_token));
+                setMessage(attempt_token ? SUCCESS_CREATE_ATTEMPT : ERROR_CREATE_ATTEMPT);
                 setShowSnackbar(true);
             })
             .catch((error) => {
                 setMessage(error.data?.detail || ERROR_CREATE_ATTEMPT);
-                dispatch(attemptActions.setSuccess(false));
+                dispatch(attemptActions.setAttemptToken(undefined));
                 setShowSnackbar(true);
                 console.error(error);
             });

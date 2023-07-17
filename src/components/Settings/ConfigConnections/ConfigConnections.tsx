@@ -81,7 +81,7 @@ export const ConfigConnections: FC<ConfigConnectionsProps> = ({ configId }) => {
             deleteConnection({ connectionId: connection.id });
             deletingConnectionType === DeviceType.CAL ? refetchAvaliableCals() : refetchAvaliableUpconv();
 
-            dispatch(attemptActions.setSuccess(false));
+            dispatch(attemptActions.setAttemptToken(undefined));
             refetchConnections();
         }
         setDeleteConfirmationOpen(false);
@@ -98,7 +98,7 @@ export const ConfigConnections: FC<ConfigConnectionsProps> = ({ configId }) => {
                 connectionId: connection.id,
                 channel: newChannelName,
             });
-            dispatch(attemptActions.setSuccess(false));
+            dispatch(attemptActions.setAttemptToken(undefined));
             refetchConnections();
         }
     };
@@ -119,7 +119,7 @@ export const ConfigConnections: FC<ConfigConnectionsProps> = ({ configId }) => {
                 connectedTo: newConnectedToName,
             });
 
-            dispatch(attemptActions.setSuccess(false));
+            dispatch(attemptActions.setAttemptToken(undefined));
             refetchConnections();
         }
     };
@@ -135,7 +135,7 @@ export const ConfigConnections: FC<ConfigConnectionsProps> = ({ configId }) => {
                 deviceId: connection.device_id,
                 model: newModel,
             });
-            dispatch(attemptActions.setSuccess(false));
+            dispatch(attemptActions.setAttemptToken(undefined));
             refetchConnections();
         }
     };

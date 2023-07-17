@@ -151,7 +151,7 @@ const injectedRtkApi = api
                 query: (queryArg) => ({
                     url: `/devices/${queryArg.deviceId}/state`,
                     method: 'PUT',
-                    body: queryArg.updateDeviceState,
+                    params: { new_state: queryArg.newState, attempt_token: queryArg.attemptToken },
                 }),
                 invalidatesTags: ['devices'],
             }),
@@ -419,10 +419,11 @@ export type UpdateExistingDeviceModelDevicesDeviceIdModelPutApiArg = {
     deviceId: number;
     model: string;
 };
-export type UpdateExistingDeviceStateDevicesDeviceIdStatePutApiResponse = /** status 200 Successful Response */ Device;
+export type UpdateExistingDeviceStateDevicesDeviceIdStatePutApiResponse = /** status 200 Successful Response */ any;
 export type UpdateExistingDeviceStateDevicesDeviceIdStatePutApiArg = {
     deviceId: number;
-    updateDeviceState: UpdateDeviceState;
+    newState: string;
+    attemptToken: string;
 };
 export type UpdateExistingConnectionConnectionsConnectionIdPutApiResponse =
     /** status 200 Successful Response */ Connection;
@@ -591,24 +592,6 @@ export type CalCreate = {
     type_name: string;
     model_name?: string;
 };
-export type Connections = {
-    device_id: number;
-    device: string;
-    connected_to_device?: string;
-    connected_to_device_model_name?: string;
-    connected_to_device_channel?: string;
-    id: number;
-    serial_number: string;
-    model_name?: string;
-    state_name?: string;
-};
-export type UpdateDeviceState = {
-    config_cals: Connections[];
-    config_upconv: Connections[];
-    port: string;
-    speed: number;
-    state: string;
-};
 export type Connection = {
     device_id: number;
     connected_to_device_id?: number;
@@ -630,6 +613,17 @@ export type Configuration = {
 export type ConfigurationCreate = {
     name: string;
 };
+export type Connections = {
+    device_id: number;
+    device: string;
+    connected_to_device?: string;
+    connected_to_device_model_name?: string;
+    connected_to_device_channel?: string;
+    id: number;
+    serial_number: string;
+    model_name?: string;
+    state_name?: string;
+};
 export type ConnectionsTyped = {
     config_cals: Connections[];
     config_upconv: Connections[];
@@ -650,7 +644,7 @@ export type AttemptStatus = {
     port_id: number;
     id: number;
     timestamp: string;
-    success: boolean;
+    attempt_token: string;
 };
 export type AttemptRelatedCreate = {
     configuration_id: number;
@@ -668,7 +662,7 @@ export type AttemptConnections = {
     config_cals: Connections[];
     config_upconv: Connections[];
     attempt: AttemptRelated;
-    success: boolean;
+    attempt_token: string;
 };
 export type AttemptCreate = {
     configuration_id: number;

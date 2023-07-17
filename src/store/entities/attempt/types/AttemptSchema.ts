@@ -6,7 +6,7 @@ export interface AttemptState {
     configuration: Configuration;
     speed: number | undefined;
     port: string | undefined;
-    success: boolean;
+    attempt_token: string | undefined;
 }
 
 export interface RootState {

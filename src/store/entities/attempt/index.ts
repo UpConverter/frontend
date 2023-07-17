@@ -4,6 +4,6 @@ export {
     getAttemptConfigName,
     getAttemptPort,
     getAttemptSpeed,
-    getAttemptSuccess,
+    getAttemptToken,
 } from '@store/entities/attempt/selectors/attemptSelector';
 export { attemptActions, attemptReducer } from '@store/entities/attempt/slices/attemptSlice';
