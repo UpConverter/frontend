@@ -1,80 +1,51 @@
-import {
-    useGetLastAttemptAttemptsLastGetQuery,
-    useUpdateExistingDeviceStateDevicesDeviceIdStatePutMutation,
-} from '@api/generatedApi';
-import { getRouteSettings } from '@app/providers/AppRouter';
-import { useAppDispatch } from '@hooks/useAppDispatch';
-import { Box, Button, Typography } from '@mui/material';
-import { attemptActions, getAttemptToken } from '@store/entities/attempt';
-import { ERROR_SUCCESS_ATTEMPT_BEGIN, ERROR_SUCCESS_ATTEMPT_END } from '@store/entities/attempt/constants/errors';
-import { useSelector } from 'react-redux';
-import { Link as RouterLink } from 'react-router-dom';
+import { type AttemptCals } from '@api/generatedApi';
+import { CustomButton } from '@components/UI/CustomButton';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import { Box } from '@mui/material';
+import type { FC } from 'react';
+import { useState } from 'react';
 
-import { ConverterItem } from '../ConverterItem/ConverterItem';
+import { ConverterModule } from '../ConverterModule/ConverterModule';
 import styles from './ConverterList.module.css';
 
-export const ConverterList = () => {
-    const dispatch = useAppDispatch();
-    const { data: lustAttempt, refetch: refetchLastAttempt } = useGetLastAttemptAttemptsLastGetQuery();
-    const attemptToken = useSelector(getAttemptToken);
-    const [updateState] = useUpdateExistingDeviceStateDevicesDeviceIdStatePutMutation();
+type ConverterListProps = {
+    lustUpconverters: AttemptCals;
+};
 
-    if (!attemptToken) {
-        return (
-            <Box className={styles.errorContainer}>
-                <Box className={styles.errorBox}>
-                    <Typography
-                        gutterBottom
-                        variant='h6'
-                    >
-                        {ERROR_SUCCESS_ATTEMPT_BEGIN}
-                    </Typography>
+export const ConverterList: FC<ConverterListProps> = ({ lustUpconverters }) => {
+    const [currentPage, setCurrentPage] = useState(1);
 
-                    <Button
-                        className={styles.button}
-                        color='primary'
-                        component={RouterLink}
-                        to={getRouteSettings()}
-                        variant='contained'
-                    >
-                        {ERROR_SUCCESS_ATTEMPT_END}
-                    </Button>
-                </Box>
-            </Box>
-        );
-    }
+    const handleNextPage = () => {
+        setCurrentPage((prevPage) => prevPage + 1);
+    };
 
-    const handleStateUpdate = (deviceId: number, newState: string) => {
-        if (attemptToken) {
-            updateState({
-                deviceId: deviceId,
-                newState: newState,
-                attemptToken: attemptToken,
-            })
-                .unwrap()
-                .then((response) => {
-                    // onClose();
-                    console.log(response);
-                    dispatch(attemptActions.setAttemptToken(response.attemptToken));
-                    refetchLastAttempt();
-                })
-                .catch((error) => {
-                    console.error(error);
-                    // setMessage(error.data?.detail || 'Ошибка создания устройства');
-                    // setShowSnackbar(true);
-                });
-        }
+    const handlePrevPage = () => {
+        setCurrentPage((prevPage) => prevPage - 1);
     };
 
     return (
-        <Box className={styles.listContainer}>
-            {lustAttempt?.config_upconv.map((upconv, idx) => (
-                <ConverterItem
-                    device={upconv}
+        <Box>
+            {lustUpconverters.cals.slice(currentPage - 1, currentPage).map((cal, idx) => (
+                <ConverterModule
+                    attemptUpconverters={cal}
                     key={idx}
-                    onStateUpdate={handleStateUpdate}
                 />
             ))}
+            <Box className={styles.centerConatiner}>
+                <CustomButton
+                    disabled={currentPage === 1}
+                    onClick={handlePrevPage}
+                >
+                    <ArrowBackIosIcon />
+                </CustomButton>
+                <CustomButton
+                    disabled={currentPage >= lustUpconverters.cals.length}
+                    onClick={handleNextPage}
+                >
+                    <ArrowForwardIosIcon />
+                </CustomButton>
+            </Box>
         </Box>
     );
 };

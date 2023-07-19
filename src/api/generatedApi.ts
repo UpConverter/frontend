@@ -309,13 +309,6 @@ const injectedRtkApi = api
                 query: () => ({ url: `/attempts/last` }),
                 providesTags: ['attempts'],
             }),
-            getLastSuccessAttemptAttemptsLastSuccessGet: build.query<
-                GetLastSuccessAttemptAttemptsLastSuccessGetApiResponse,
-                GetLastSuccessAttemptAttemptsLastSuccessGetApiArg
-            >({
-                query: () => ({ url: `/attempts/last_success` }),
-                providesTags: ['attempts'],
-            }),
             updateExistingAttemptAttemptsAttemptIdPut: build.mutation<
                 UpdateExistingAttemptAttemptsAttemptIdPutApiResponse,
                 UpdateExistingAttemptAttemptsAttemptIdPutApiArg
@@ -333,6 +326,13 @@ const injectedRtkApi = api
             >({
                 query: (queryArg) => ({ url: `/attempts/${queryArg.attemptId}`, method: 'DELETE' }),
                 invalidatesTags: ['attempts'],
+            }),
+            getLastAttemptUpconvertersAttemptsLastUpconvertersGet: build.query<
+                GetLastAttemptUpconvertersAttemptsLastUpconvertersGetApiResponse,
+                GetLastAttemptUpconvertersAttemptsLastUpconvertersGetApiArg
+            >({
+                query: () => ({ url: `/attempts/last/upconverters` }),
+                providesTags: ['attempts'],
             }),
         }),
         overrideExisting: false,
@@ -512,9 +512,6 @@ export type CreateNewAttemptAttemptsPostApiArg = {
 };
 export type GetLastAttemptAttemptsLastGetApiResponse = /** status 200 Successful Response */ AttemptConnections;
 export type GetLastAttemptAttemptsLastGetApiArg = void;
-export type GetLastSuccessAttemptAttemptsLastSuccessGetApiResponse =
-    /** status 200 Successful Response */ AttemptConnections;
-export type GetLastSuccessAttemptAttemptsLastSuccessGetApiArg = void;
 export type UpdateExistingAttemptAttemptsAttemptIdPutApiResponse = /** status 200 Successful Response */ Attempt;
 export type UpdateExistingAttemptAttemptsAttemptIdPutApiArg = {
     attemptId: number;
@@ -524,6 +521,9 @@ export type DeleteExistingAttemptAttemptsAttemptIdDeleteApiResponse = /** status
 export type DeleteExistingAttemptAttemptsAttemptIdDeleteApiArg = {
     attemptId: number;
 };
+export type GetLastAttemptUpconvertersAttemptsLastUpconvertersGetApiResponse =
+    /** status 200 Successful Response */ AttemptCals;
+export type GetLastAttemptUpconvertersAttemptsLastUpconvertersGetApiArg = void;
 export type Port = {
     id: number;
     name: string;
@@ -623,6 +623,7 @@ export type Connections = {
     serial_number: string;
     model_name?: string;
     state_name?: string;
+    additional_state_name?: string;
 };
 export type ConnectionsTyped = {
     config_cals: Connections[];
@@ -669,6 +670,14 @@ export type AttemptCreate = {
     speed_id: number;
     port_id: number;
 };
+export type AttemptUpconverters = {
+    cal: string;
+    upconverters: Connections[];
+};
+export type AttemptCals = {
+    cals: AttemptUpconverters[];
+    attempt_token: string;
+};
 export const {
     useGetPortsPortsGetQuery,
     useGetSpeedsSpeedsGetQuery,
@@ -706,7 +715,7 @@ export const {
     useGetAttemptsAttemptsGetQuery,
     useCreateNewAttemptAttemptsPostMutation,
     useGetLastAttemptAttemptsLastGetQuery,
-    useGetLastSuccessAttemptAttemptsLastSuccessGetQuery,
     useUpdateExistingAttemptAttemptsAttemptIdPutMutation,
     useDeleteExistingAttemptAttemptsAttemptIdDeleteMutation,
+    useGetLastAttemptUpconvertersAttemptsLastUpconvertersGetQuery,
 } = injectedRtkApi;
