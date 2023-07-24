@@ -4,21 +4,20 @@ import {
     useGetLastAttemptUpconvertersAttemptsLastUpconvertersGetQuery,
     useUpdateExistingDeviceStateDevicesDeviceIdStatePutMutation,
 } from '@api/generatedApi';
-import { getRouteSettings } from '@app/providers/AppRouter';
 import { CustomButton } from '@components/UI/CustomButton';
 import { useAppDispatch } from '@hooks/useAppDispatch';
 import Crop54Icon from '@mui/icons-material/Crop54';
 import GridViewIcon from '@mui/icons-material/GridView';
-import { Alert, Box, Button, Snackbar, Typography } from '@mui/material';
+import { Alert, Box, Snackbar, Typography } from '@mui/material';
 import { attemptActions, getAttemptToken } from '@store/entities/attempt';
-import { ERROR_SUCCESS_ATTEMPT_BEGIN, ERROR_SUCCESS_ATTEMPT_END } from '@store/entities/attempt/constants/errors';
+import { ERROR_SUCCESS_ATTEMPT_BEGIN } from '@store/entities/attempt/constants/errors';
 import { getIsModuleView, upconverterActions } from '@store/entities/upconverter';
 import { ERROR_MANY_CAL_STATE } from '@store/i18n/devices';
 import type { FC } from 'react';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Link as RouterLink } from 'react-router-dom';
 
+import { ConverterError } from '../ConverterError/ConverterError';
 import { ConverterItem } from '../ConverterItem/ConverterItem';
 import styles from './ConverterModule.module.css';
 type ConverterModuleProps = {
@@ -44,28 +43,7 @@ export const ConverterModule: FC<ConverterModuleProps> = ({ attemptUpconverters 
     };
 
     if (!attemptToken) {
-        return (
-            <Box className={styles.errorContainer}>
-                <Box className={styles.errorBox}>
-                    <Typography
-                        gutterBottom
-                        variant='h6'
-                    >
-                        {ERROR_SUCCESS_ATTEMPT_BEGIN}
-                    </Typography>
-
-                    <Button
-                        className={styles.button}
-                        color='primary'
-                        component={RouterLink}
-                        to={getRouteSettings()}
-                        variant='contained'
-                    >
-                        {ERROR_SUCCESS_ATTEMPT_END}
-                    </Button>
-                </Box>
-            </Box>
-        );
+        return <ConverterError message={ERROR_SUCCESS_ATTEMPT_BEGIN} />;
     }
 
     const handleStateUpdate = (deviceId: number, newState: string) => {
