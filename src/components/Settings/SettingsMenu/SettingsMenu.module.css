@@ -5,15 +5,16 @@
 
 .leftSide {
     display: flex;
+    flex: 0 0 auto;
     flex-direction: column;
     align-items: flex-start;
 
     width: 260px;
-    margin: 10px 25px 25px 10px;
+    margin: 10px 25px 0 10px;
 }
 
 .menuItems {
-    height: 70vh;
+    flex: 1 0 auto;
 }
 
 .rightSide {

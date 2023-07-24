@@ -123,7 +123,7 @@ export const SettingsDevices = () => {
 
     return (
         <Box className={styles.mainContainer}>
-            <Box className={styles.mr}>
+            <Box className={styles.deviceGrid}>
                 <Box className={styles.inlineContainer}>
                     <InputLabel>{AVALIABLE_CALS}</InputLabel>
                     {!isUpconvertersLoading && !upconverters ? (
